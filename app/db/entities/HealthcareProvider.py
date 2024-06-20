@@ -34,14 +34,6 @@ class HealthcareProvider(Base):
         "modified_at", TIMESTAMP, nullable=False, default=datetime.now()
     )
 
-    # application_versions: Mapped[
-    #     List[
-    #         "healthcare_provider_application_version.HealthcareProviderApplicationVersion"
-    #     ]
-    # ] = relationship(back_populates="healthcare_provider")
-    # qualified_protocols: Mapped[
-    #     List["healthcare_provider_qualification.HealthcareProviderQualification"]
-    # ] = relationship(back_populates="healthcare_provider")
 
     def __repr__(self) -> str:
         return self._repr(
