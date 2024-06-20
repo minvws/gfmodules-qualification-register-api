@@ -1,8 +1,7 @@
 import logging
-from typing import List, Sequence
+from typing import Sequence
 
 from sqlalchemy import select
-from sqlalchemy.exc import DatabaseError
 from sqlalchemy.orm import Session
 
 from app.db.repository.repository_base import RepositoryBase, TArgs

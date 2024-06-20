@@ -1,9 +1,8 @@
 from datetime import datetime
-from typing import List
 from uuid import UUID, uuid4
 
 from sqlalchemy import types, String, TIMESTAMP
-from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy.orm import mapped_column, Mapped
 
 from app.db.entities.base import Base
 # from app.db.entities import healthcare_provider_application_version
