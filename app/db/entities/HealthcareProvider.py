@@ -44,6 +44,4 @@ class HealthcareProvider(Base):
             statutory_name=self.statutory_name,
             created_at=self.created_at,
             modified_at=self.modified_at,
-            # application_versions=self.application_versions,
-            # qualified_protocols=self.qualified_protocols,
         )
