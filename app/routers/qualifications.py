@@ -1,10 +1,10 @@
 import logging
-from typing import List
+from typing import List, Sequence
 
 from fastapi import APIRouter, Depends
 
 from app.container import get_healthcare_provider_database_service
-from app.db.HealthcareProviderDatabaseService import HealthcareProviderDatabaseService
+from app.db.services.healthcare_provider_database_service import HealthcareProviderDatabaseService
 from app.dto.HealthcareProviderDto import HealthcareProviderDto
 
 logger = logging.getLogger(__name__)
@@ -18,5 +18,5 @@ PAGE_LIMIT = 25
             summary="Get all qualifications based on the supplied query params")
 def get_all(
         healthcare_provider_database_service: HealthcareProviderDatabaseService = Depends(get_healthcare_provider_database_service)
-) -> List[HealthcareProviderDto]:
+) -> Sequence[HealthcareProviderDto]:
     return healthcare_provider_database_service.get_all()
