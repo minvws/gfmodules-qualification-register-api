@@ -1,11 +1,11 @@
 from app.db.db_session import DbSession
-from app.db.entities.healthcare_provider import HealthcareProvider
+from app.db.entities.application import Application
 from app.db.repository.repository_base import RepositoryBase
 
 
-class HealthcareProviderRepository(RepositoryBase[HealthcareProvider]):
+class ApplicationRepository(RepositoryBase[Application]):
 
-    model = HealthcareProvider
+    model = Application
 
     def __init__(self, db_session: DbSession):
         super().__init__(db_session)

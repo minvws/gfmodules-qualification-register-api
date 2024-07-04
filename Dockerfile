@@ -27,6 +27,8 @@ RUN groupadd --system ${APP_GROUP} --gid=${NEW_GID} && \
 
 RUN apt update && \
     apt install -y \
+        curl \
+        iputils-ping \
         git \
         gnupg2 \
         make \

@@ -1,67 +1,81 @@
-from typing import Any, Type
+import logging
+from typing import Any, TypeVar, Sequence
 
-from sqlalchemy import Engine
+from sqlalchemy import Engine, Select
+from sqlalchemy.exc import DatabaseError
 from sqlalchemy.orm import Session
 
-from app.db.entities.base import Base
-from app.db.repository.repository_base import RepositoryBase, TRepositoryBase
+logger = logging.getLogger(__name__)
 
 
-class DbSession:
+T = TypeVar("T")
+
+
+class DbSession(object):
     def __init__(self, engine: Engine) -> None:
         self._engine = engine
-
-    def __enter__(self) -> 'DbSession':
-        """
-        Create a new session when entering the context manager
-        """
         self.session = Session(self._engine, expire_on_commit=False)
-        return self
 
-    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
-        """
-        Close the session when exiting the context manager
-        """
+    def open(self) -> None:
+        self.session.begin()
+
+    def close(self) -> None:
         self.session.close()
 
-    def get_repository(self, repository_class: Type[TRepositoryBase]) -> TRepositoryBase:
-        if issubclass(repository_class, RepositoryBase):
-            return repository_class(self.session)
-        raise ValueError(f"No repository registered for model {repository_class}")
+    def merge(self, entity: T) -> T:
+        return self.session.merge(entity)
 
+    def create(self, entity: T) -> None:
+        try:
+            self.session.add(entity)
+            self.session.commit()
+            self.session.refresh(entity)
+        except DatabaseError as e:
+            logger.error(e)
+            self.session.rollback()
+            raise e
 
-    def add_resource(self, entry: Base) -> None:
-        """
-        Add a resource to the session, so it will be inserted/updated in the database on the next commit
+    def update(self, entity: T) -> None:
+        try:
+            self.session.commit()
+            self.session.refresh(entity)
+        except DatabaseError as e:
+            logger.error(e)
+            self.session.rollback()
+            raise e
 
-        :param entry:
-        :return:
-        """
-        self.session.add(entry)
+    def delete(self, entity: T) -> None:
+        try:
+            self.session.delete(entity)
+            self.session.commit()
+        except DatabaseError as e:
+            logger.error(e)
+            self.session.rollback()
+            raise e
 
-    def delete_resource(self, entry: Base) -> None:
-        """
-        Delete a resource from the session, so it will be deleted from the database on the next commit
+    def scalars_first(self, statement: Select[tuple[T]]) -> T | None:
+        try:
+            return self.session.scalars(statement).first()
+        except DatabaseError as e:
+            logger.error(e)
+            self.session.rollback()
+            raise e
 
-        :param entry:
-        :return:
-        """
-        # database cascading will take care of the rest
-        self.session.delete(entry)
+    def scalars_all(self, statement: Select[tuple[T]]) -> Sequence[T]:
+        try:
+            return self.session.scalars(statement).all()
+        except DatabaseError as e:
+            logger.error(e)
+            self.session.rollback()
+            raise e
 
-    def commit(self) -> None:
-        """
-        Commits any pending work in the session to the database
-
-        :return:
-        """
-        self.session.commit()
+    def execute_scalar(self, statement: Select[tuple[T]]) -> Any | None:
+        try:
+            return self.session.execute(statement).scalar()
+        except DatabaseError as e:
+            logger.error(e)
+            self.session.rollback()
+            raise e
 
     def rollback(self) -> None:
-        """
-        Rollback the current transaction
-
-        :return:
-        """
         self.session.rollback()
-

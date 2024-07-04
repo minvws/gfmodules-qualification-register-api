@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 class Database:
-    def __init__(self, dsn: str):
+    def __init__(self, dsn: str, pool_recycle: int = 25, pool_size: int = 10):
         try:
-            self.engine = create_engine(dsn, echo=False)
+            self.engine = create_engine(dsn, echo=False, pool_recycle=pool_recycle, pool_size=pool_size)
         except BaseException as e:
             logger.error("Error while connecting to database: %s", e)
             raise e

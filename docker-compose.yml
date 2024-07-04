@@ -1,7 +1,7 @@
 version: "3.5"
 
 services:
-    app:
+    register-api:
         build:
             context: .
             args:

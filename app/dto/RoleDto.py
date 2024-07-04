@@ -3,6 +3,7 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
-class ApplicationVersionDto(BaseModel):
+class RoleDto(BaseModel):
     id: UUID
-    version: str
+    name: str
+    description: str | None
