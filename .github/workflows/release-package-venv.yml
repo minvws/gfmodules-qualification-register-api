@@ -2,7 +2,6 @@ name: Package python virtual env
 
 on:
   push:
-    branches: [ build-venv ]
     tags:
       - v*
 
