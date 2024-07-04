@@ -18,7 +18,7 @@ class DbSessionContext:
         return self._db_session
 
     def __exit__(
-        self, exc_type: Exception, exc_val: TracebackException, exc_tb: TracebackType
+        self, exc_type: Exception | None, exc_val: TracebackException | None, exc_tb: TracebackType | None
     ) -> None:
         if self._db_session is not None:
             if exc_val is not None:

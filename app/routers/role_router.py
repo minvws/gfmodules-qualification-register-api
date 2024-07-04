@@ -1,4 +1,3 @@
-import logging
 import uuid
 from typing import Sequence
 
@@ -10,7 +9,6 @@ from app.db.services.role_database_service import (
 )
 from app.dto.RoleDto import RoleDto
 
-logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/roles", tags=["roles"])
 
 
