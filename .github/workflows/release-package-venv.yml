@@ -15,5 +15,5 @@ jobs:
       - name: Build venv package
         uses: minvws/nl-irealisatie-generic-pipelines/.github/actions/python-venv-package@main
         with:
-          python-version: ${{ matrix.python_version }}
+          python_version: ${{ matrix.python_version }}
           package_file_name: nl-irealisatie-zmodules-qualification-register-api
