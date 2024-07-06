@@ -33,7 +33,7 @@ make container-build
 
 # Run the container
 echo "➡️ Running the application docker container"
-docker compose up app -d
+docker compose up -d
 
 # Create the .autopilot file
 touch .autopilot

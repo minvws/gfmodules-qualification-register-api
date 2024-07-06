@@ -1,12 +1,14 @@
-
 import inject
 
+
+from app.db.db import Database
+from app.config import get_config
 from app.db.db_session_factory import DbSessionFactory
-from app.db.repository_factory import RepositoryFactory
 from app.db.services.application_database_service import (
     ApplicationDatabaseService,
     ApplicationDatabaseServiceInterface,
 )
+from app.db.repository_factory import RepositoryFactory
 from app.db.services.healthcare_provider_database_service import (
     HealthcareProviderDatabaseService,
     HealthcareProviderDatabaseServiceInterface,
@@ -23,8 +25,6 @@ from app.db.services.vendor_database_service import (
     VendorDatabaseService,
     VendorDatabaseServiceInterface,
 )
-from db.db import Database
-from config import get_config
 
 
 def container_config(binder: inject.Binder) -> None:

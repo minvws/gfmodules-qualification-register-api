@@ -2,7 +2,7 @@
 loglevel=debug
 
 [database]
-dsn=postgresql+psycopg://postgres:postgres@postgres:5432/postgres
+dsn=postgresql+psycopg://postgres:postgres@qualification_db:5432/postgres
 
 [example]
 argument1 = "foobar"

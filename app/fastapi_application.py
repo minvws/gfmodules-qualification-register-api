@@ -6,15 +6,15 @@ from fastapi import FastAPI
 import uvicorn
 from starlette.middleware.cors import CORSMiddleware
 
-from routers.default_router import router as default_router
-from routers.health_router import router as health_router
-from routers.qualification_router import router as qualification_router
-from routers.application_router import router as application_router
-from routers.role_router import router as role_router
-from routers.system_type_router import router as system_type_router
-from routers.vendor_router import router as vendor_router
+from app.routers.default_router import router as default_router
+from app.routers.health_router import router as health_router
+from app.routers.qualification_router import router as qualification_router
+from app.routers.application_router import router as application_router
+from app.routers.role_router import router as role_router
+from app.routers.system_type_router import router as system_type_router
+from app.routers.vendor_router import router as vendor_router
 
-from config import get_config
+from app.config import get_config
 
 
 def get_uvicorn_params() -> dict[str, Any]:
@@ -26,17 +26,23 @@ def get_uvicorn_params() -> dict[str, Any]:
         "reload": config.uvicorn.reload,
     }
     if config.uvicorn.use_ssl:
-        kwargs["ssl_keyfile"] = (
-            config.uvicorn.ssl_base_dir + "/" + config.uvicorn.ssl_key_file
-        )
-        kwargs["ssl_certfile"] = (
-            config.uvicorn.ssl_base_dir + "/" + config.uvicorn.ssl_cert_file
-        )
+        if (
+            config.uvicorn.ssl_base_dir
+            and config.uvicorn.ssl_cert_file
+            and config.uvicorn.ssl_key_file
+        ):
+            kwargs["ssl_keyfile"] = (
+                config.uvicorn.ssl_base_dir + "/" + config.uvicorn.ssl_key_file
+            )
+            kwargs["ssl_certfile"] = (
+                config.uvicorn.ssl_base_dir + "/" + config.uvicorn.ssl_cert_file
+            )
+
     return kwargs
 
 
 def run() -> None:
-    uvicorn.run("application:create_fastapi_app", **get_uvicorn_params())
+    uvicorn.run("app.fastapi_application:create_fastapi_app", **get_uvicorn_params())
 
 
 def create_fastapi_app() -> FastAPI:
