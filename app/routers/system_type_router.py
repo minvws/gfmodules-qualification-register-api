@@ -14,7 +14,7 @@ from app.dto.SystemTypeDto import SystemTypeDto
 router = APIRouter(prefix="/system_types", tags=["system types"])
 
 
-@router.get("/", summary="Get all system types")
+@router.get("", summary="Get all system types")
 def get_all(
     system_type_database_service: SystemTypeDatabaseServiceInterface = Depends(
         get_system_type_database_service

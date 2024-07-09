@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/applications", tags=["applications"])
 
 
-@router.get("/", summary="Get all applications")
+@router.get("", summary="Get all applications")
 def get_all(
     application_database_service: ApplicationDatabaseServiceInterface = Depends(
         get_application_database_service

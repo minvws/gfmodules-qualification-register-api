@@ -12,7 +12,7 @@ from app.dto.VendorDto import VendorDto
 router = APIRouter(prefix="/vendors", tags=["vendors"])
 
 
-@router.get("/", summary="Get all vendors")
+@router.get("", summary="Get all vendors")
 def get_all(
     vendor_database_service: VendorDatabaseServiceInterface = Depends(
         get_vendor_database_service

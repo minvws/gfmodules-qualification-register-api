@@ -16,7 +16,7 @@ router = APIRouter(prefix="/qualifications", tags=["qualifications"])
 PAGE_LIMIT = 25
 
 
-@router.get("/", summary="Get all qualifications based on the supplied query params")
+@router.get("", summary="Get all qualifications based on the supplied query params")
 def get_all(
     healthcare_provider_database_service: HealthcareProviderDatabaseServiceInterface = Depends(
         get_healthcare_provider_database_service

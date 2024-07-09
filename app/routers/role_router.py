@@ -12,7 +12,7 @@ from app.dto.RoleDto import RoleDto
 router = APIRouter(prefix="/roles", tags=["roles"])
 
 
-@router.get("/", summary="Get all roles")
+@router.get("", summary="Get all roles")
 def get_all(
     role_database_service: RoleDatabaseServiceInterface = Depends(
         get_role_database_service
