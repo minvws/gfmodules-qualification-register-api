@@ -20,7 +20,7 @@ up: ## Start the container
 	docker compose up
 
 bash: ## Runs a bash prompt inside the container
-	docker compose run --rm app bash
+	docker compose run --rm register-api bash
 
 lint: ## Check for linting errors
 	$(RUN_PREFIX) ruff check
