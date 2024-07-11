@@ -4,15 +4,15 @@ from typing import Any
 
 from fastapi import FastAPI
 import uvicorn
-from starlette.middleware.cors import CORSMiddleware
 
+from app.fastapi.setup import setup_fastapi, setup_fastapi_for_api, fastapi_mount_api
 from app.routers.default_router import router as default_router
 from app.routers.health_router import router as health_router
-from app.routers.qualification_router import router as qualification_router
-from app.routers.application_router import router as application_router
-from app.routers.role_router import router as role_router
-from app.routers.system_type_router import router as system_type_router
-from app.routers.vendor_router import router as vendor_router
+from app.routers.v1.qualification_router import router as qualification_router
+from app.routers.v1.application_router import router as application_router
+from app.routers.v1.role_router import router as role_router
+from app.routers.v1.system_type_router import router as system_type_router
+from app.routers.v1.vendor_router import router as vendor_router
 
 from app.config import get_config
 
@@ -47,7 +47,23 @@ def run() -> None:
 
 def create_fastapi_app() -> FastAPI:
     application_init()
-    fastapi = setup_fastapi()
+
+    config = get_config()
+
+    fastapi = setup_fastapi(config, [
+        default_router,
+        health_router,
+    ])
+
+    # v1 api
+    fastapi_v1 = setup_fastapi_for_api(config, routers=[
+        application_router,
+        qualification_router,
+        role_router,
+        system_type_router,
+        vendor_router,
+    ], api_version="1.0.0")
+    fastapi_mount_api(root_fastapi=fastapi, mount_path="/v1", api=fastapi_v1)
 
     return fastapi
 
@@ -65,33 +81,3 @@ def setup_logging() -> None:
         level=loglevel,
         datefmt="%m/%d/%Y %I:%M:%S %p",
     )
-
-
-def setup_fastapi() -> FastAPI:
-    config = get_config()
-
-    fastapi = (
-        FastAPI(docs_url=config.uvicorn.docs_url, redoc_url=config.uvicorn.redoc_url)
-        if config.uvicorn.swagger_enabled
-        else FastAPI(docs_url=None, redoc_url=None)
-    )
-    fastapi.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-    routers = [
-        default_router,
-        health_router,
-        qualification_router,
-        application_router,
-        role_router,
-        system_type_router,
-        vendor_router,
-    ]
-    for router in routers:
-        fastapi.include_router(router)
-
-    return fastapi
