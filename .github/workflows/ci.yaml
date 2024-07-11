@@ -110,3 +110,53 @@ jobs:
 
             - name: Run the tests
               run: poetry run $(make test --just-print --silent)
+
+    spectral:
+      name: Run spectral checks
+      runs-on: ubuntu-22.04
+      needs: build
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Setup npm
+          uses: actions/setup-node@v4
+          with:
+            node-version: '20'
+
+        - name: Run build action
+          uses: minvws/nl-irealisatie-generic-pipelines/.github/actions/poetry-install@main
+          with:
+            python_version: "3.11"
+
+        - name: Copy example configuration
+          run: cp app.conf.autopilot app.conf
+
+        - name: Run the application silently
+          run: poetry run python -m app.main &
+
+        - name: Wait for the application to start
+          run: sleep 5
+
+        - name: Download the OpenAPI schema
+          run: curl -o openapi.json http://localhost:8507/v1/openapi.json
+
+        - name: Run spectral Lint
+          run: npx @stoplight/spectral-cli lint -f stylish -o spectral-report.txt http://localhost:8507/v1/openapi.json
+
+        - name: Set Job Summary
+          if: success() || failure()
+          run: |
+            echo "# Spectral results" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo '```console'  >> $GITHUB_STEP_SUMMARY
+            cat spectral-report.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+
+        - name: openapi.json as artifact
+          if: success() || failure()
+          uses: actions/upload-artifact@v4
+          with:
+            name: openapi
+            path: openapi.json

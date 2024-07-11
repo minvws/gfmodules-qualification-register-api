@@ -134,6 +134,6 @@ rules:
     then:
       function: casing
       functionOptions:
-        type: snake
+        type: camel
       field: "@key"
     message: Properties must be lowerCamelCase.
