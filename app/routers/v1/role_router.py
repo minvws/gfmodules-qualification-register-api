@@ -8,11 +8,12 @@ from app.db.services.role_database_service import (
     RoleDatabaseServiceInterface,
 )
 from app.dto.RoleDto import RoleDto
+from app.openapi.responses import api_version_header_responses
 
 router = APIRouter(prefix="/roles", tags=["roles"])
 
 
-@router.get("", summary="Get all roles")
+@router.get("", summary="Get all roles", responses={**api_version_header_responses([200])})
 def get_all(
     role_database_service: RoleDatabaseServiceInterface = Depends(
         get_role_database_service
@@ -21,7 +22,7 @@ def get_all(
     return role_database_service.get_all()
 
 
-@router.get("/{id}", summary="Get role by id")
+@router.get("/{id}", summary="Get role by id", responses={**api_version_header_responses([200, 404, 422])})
 def get(
     id_: uuid.UUID = Path(alias="id"),
     role_database_service: RoleDatabaseServiceInterface = Depends(

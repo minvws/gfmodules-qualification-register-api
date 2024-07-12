@@ -9,12 +9,13 @@ from app.db.services.application_database_service import (
     ApplicationDatabaseServiceInterface,
 )
 from app.dto.ApplicationWithVendorDto import ApplicationWithVendorDto
+from app.openapi.responses import api_version_header_responses
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/applications", tags=["applications"])
 
 
-@router.get("", summary="Get all applications")
+@router.get("", summary="Get all applications", responses={**api_version_header_responses([200])})
 def get_all(
     application_database_service: ApplicationDatabaseServiceInterface = Depends(
         get_application_database_service
@@ -23,7 +24,7 @@ def get_all(
     return application_database_service.get_all()
 
 
-@router.get("/{id}", summary="Get application by id")
+@router.get("/{id}", summary="Get application by id", responses={**api_version_header_responses([200, 404, 422])})
 def get(
     id_: uuid.UUID = Path(alias="id"),
     application_database_service: ApplicationDatabaseServiceInterface = Depends(
