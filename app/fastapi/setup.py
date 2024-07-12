@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any, Optional
 
 from fastapi import FastAPI, APIRouter
 from starlette.middleware.cors import CORSMiddleware
@@ -8,11 +8,18 @@ from app.config import Config
 from app.middleware.api_version import ApiVersionHeaderMiddleware
 
 
-def setup_fastapi(config: Config, routers: List[APIRouter]) -> FastAPI:
+def setup_fastapi(
+        config: Config,
+        routers: List[APIRouter],
+        description: str = "",
+        openapi_tags: Optional[List[Dict[str, Any]]] = None,
+) -> FastAPI:
+    title = "Qualification Register API"
+
     fastapi = (
-        FastAPI(docs_url=config.uvicorn.docs_url, redoc_url=config.uvicorn.redoc_url, redirect_slashes=False)
+        FastAPI(title=title, docs_url=config.uvicorn.docs_url, redoc_url=config.uvicorn.redoc_url, redirect_slashes=False, description=description, openapi_tags=openapi_tags)
         if config.uvicorn.swagger_enabled
-        else FastAPI(docs_url=None, redoc_url=None, redirect_slashes=False)
+        else FastAPI(title=title, docs_url=None, redoc_url=None, redirect_slashes=False, description=description, openapi_tags=openapi_tags)
     )
 
     fastapi.add_middleware(
@@ -29,8 +36,19 @@ def setup_fastapi(config: Config, routers: List[APIRouter]) -> FastAPI:
     return fastapi
 
 
-def setup_fastapi_for_api(config: Config, routers: List[APIRouter], api_version: str) -> FastAPI:
-    fastapi = setup_fastapi(config, routers)
+def setup_fastapi_for_api(
+        config: Config,
+        routers: List[APIRouter],
+        api_version: str,
+        description: str = "",
+        openapi_tags: Optional[List[Dict[str, Any]]] = None,
+) -> FastAPI:
+    fastapi = setup_fastapi(
+        config,
+        routers,
+        description,
+        openapi_tags
+    )
 
     fastapi.add_middleware(ApiVersionHeaderMiddleware, api_version=api_version)
 
