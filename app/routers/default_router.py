@@ -20,7 +20,7 @@ LOGO = r"""
 """
 
 
-@router.get("/")
+@router.get("/", include_in_schema=False)
 def index() -> Response:
     content = LOGO
 

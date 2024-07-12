@@ -50,19 +50,52 @@ def create_fastapi_app() -> FastAPI:
 
     config = get_config()
 
-    fastapi = setup_fastapi(config, [
-        default_router,
-        health_router,
-    ])
+    fastapi = setup_fastapi(
+        config,
+        routers=[
+            default_router,
+            health_router,
+        ],
+        description="This is the documentation for the root endpoints. "
+                    "For the rest of the API documentation see the [/v1/docs](/v1/docs).",
+        openapi_tags=[
+            {
+                "name": "health",
+                "description": "Health check endpoints"
+            },
+        ]
+    )
 
     # v1 api
-    fastapi_v1 = setup_fastapi_for_api(config, routers=[
-        application_router,
-        qualification_router,
-        role_router,
-        system_type_router,
-        vendor_router,
-    ], api_version="1.0.0")
+    fastapi_v1 = setup_fastapi_for_api(
+        config,
+        routers=[
+            application_router,
+            qualification_router,
+            role_router,
+            system_type_router,
+            vendor_router,
+        ],
+        api_version="1.0.0",
+        description="This is the documentation for the /v1 endpoints.",
+        openapi_tags=[
+            {
+                "name": "applications",
+            },
+            {
+                "name": "qualifications",
+            },
+            {
+                "name": "roles",
+            },
+            {
+                "name": "system types",
+            },
+            {
+                "name": "vendors",
+            }
+        ]
+    )
     fastapi_mount_api(root_fastapi=fastapi, mount_path="/v1", api=fastapi_v1)
 
     return fastapi

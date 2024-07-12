@@ -14,7 +14,7 @@ def ok_or_error(value: bool) -> str:
     return "ok" if value else "error"
 
 
-@router.get("/health")
+@router.get("/health", tags=["health"])
 def health(db: Database = Depends(container.get_database)) -> dict[str, Any]:
     logger.info("Checking database health")
 
