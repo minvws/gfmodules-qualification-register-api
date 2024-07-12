@@ -11,7 +11,7 @@ from app.db.services.system_type_database_service import (
 )
 from app.dto.SystemTypeDto import SystemTypeDto
 
-router = APIRouter(prefix="/system_types", tags=["system types"])
+router = APIRouter(prefix="/system-types", tags=["system types"])
 
 
 @router.get("", summary="Get all system types")
