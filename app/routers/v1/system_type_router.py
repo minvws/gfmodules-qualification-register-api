@@ -9,8 +9,8 @@ from app.container import (
 from app.db.services.system_type_database_service import (
     SystemTypeDatabaseServiceInterface,
 )
-from app.dto.SystemTypeDto import SystemTypeDto
 from app.openapi.responses import api_version_header_responses
+from app.schemas.system_type.schema import SystemTypeDto
 
 router = APIRouter(prefix="/system-types", tags=["system types"])
 

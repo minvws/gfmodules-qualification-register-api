@@ -7,8 +7,8 @@ from app.container import get_vendor_database_service
 from app.db.services.vendor_database_service import (
     VendorDatabaseServiceInterface,
 )
-from app.dto.VendorDto import VendorDto
 from app.openapi.responses import api_version_header_responses
+from app.schemas.vendor.schema import VendorDto
 
 router = APIRouter(prefix="/vendors", tags=["vendors"])
 
