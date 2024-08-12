@@ -1,4 +1,3 @@
-import datetime
 from typing import Sequence, List
 
 from app.db.entities.healthcare_provider import HealthcareProvider
@@ -37,7 +36,7 @@ def map_healthcare_provider_to_qualification_dto(entity: HealthcareProvider) -> 
                             system_type=system_type.system_type.name,
                             role_id=role.role.id,
                             role=role.role.name,
-                            qualification_date=datetime.date.today(),
+                            qualification_date=healthcare_provider_qualification.qualification_date,
                             protocol_id=healthcare_provider_qualification.protocol_version.protocol.id,
                             protocol_name=healthcare_provider_qualification.protocol_version.protocol.name,
                             protocol_type=healthcare_provider_qualification.protocol_version.protocol.protocol_type,
