@@ -24,7 +24,7 @@ def map_application_entity_to_dto(entity: Application) -> ApplicationWithVendorD
         modified_at=entity.modified_at,
         vendor=map_vendor_entity_to_summary_dto(entity.vendor),
         versions=[
-            map_application_version_to_dto(version)
+            map_application_version_entity_to_dto(version)
             for version in entity.versions
         ],
         roles=[map_role_entity_to_dto(role.role) for role in entity.roles],
@@ -35,7 +35,7 @@ def map_application_entity_to_dto(entity: Application) -> ApplicationWithVendorD
     )
 
 
-def map_application_version_to_dto(entity: ApplicationVersion) -> ApplicationVersionDto:
+def map_application_version_entity_to_dto(entity: ApplicationVersion) -> ApplicationVersionDto:
     return ApplicationVersionDto(
         id=entity.id,
         version=entity.version,
