@@ -6,7 +6,7 @@ from app.schemas.qualification.schema import QualificationDto
 
 def map_healthcare_provider_entities_to_qualification_dtos(
     entities: Sequence[HealthcareProvider],
-) -> Sequence[QualificationDto]:
+) -> List[QualificationDto]:
     return [dto for dtos in entities for dto in map_healthcare_provider_to_qualification_dto(dtos)]
 
 
