@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Sequence, List
 
 from app.db.entities.healthcare_provider import HealthcareProvider
 from app.schemas.healthcare_provider.schema import HealthcareProviderDto
@@ -12,5 +12,5 @@ def map_healthcare_provider_entity_to_dto(entity: HealthcareProvider) -> Healthc
 
 def map_healthcare_provider_entities_to_dtos(
         entities: Sequence[HealthcareProvider],
-) -> Sequence[HealthcareProviderDto]:
+) -> List[HealthcareProviderDto]:
     return [map_healthcare_provider_entity_to_dto(entity) for entity in entities]

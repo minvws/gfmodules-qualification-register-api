@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Sequence, List
 
 from app.db.entities.application import Application
 from app.db.entities.application_version import ApplicationVersion
@@ -12,7 +12,7 @@ from app.schemas.vendor.mapper import map_vendor_entity_to_summary_dto
 
 def map_application_entities_to_dtos(
         entities: Sequence[Application],
-) -> Sequence[ApplicationWithVendorDto]:
+) -> List[ApplicationWithVendorDto]:
     return [map_application_entity_to_dto(entity) for entity in entities]
 
 

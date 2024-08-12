@@ -1,5 +1,5 @@
 import datetime
-from typing import Sequence
+from typing import Sequence, List
 
 from app.db.entities.healthcare_provider import HealthcareProvider
 from app.schemas.qualification.schema import QualificationDto
@@ -11,7 +11,7 @@ def map_healthcare_provider_entities_to_qualification_dtos(
     return [dto for dtos in entities for dto in map_healthcare_provider_to_qualification_dto(dtos)]
 
 
-def map_healthcare_provider_to_qualification_dto(entity: HealthcareProvider) -> Sequence[QualificationDto]:
+def map_healthcare_provider_to_qualification_dto(entity: HealthcareProvider) -> List[QualificationDto]:
     qualifications = []
     for healthcare_provider_application_version in entity.application_versions:
         for (

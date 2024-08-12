@@ -1,11 +1,11 @@
-from typing import Sequence
+from typing import Sequence, List
 
 from app.db.entities.vendor import Vendor
 from app.schemas.application_summary.mapper import map_application_entity_to_summary_dto
 from app.schemas.vendor.schema import VendorDto, VendorSummaryDto
 
 
-def map_vendor_entities_to_dtos(entities: Sequence[Vendor]) -> Sequence[VendorDto]:
+def map_vendor_entities_to_dtos(entities: Sequence[Vendor]) -> List[VendorDto]:
     return [map_vendor_entity_to_dto(entity) for entity in entities]
 
 
