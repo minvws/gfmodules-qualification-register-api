@@ -5,8 +5,8 @@ from app.db.repository.healthcare_provider_repository import (
     HealthcareProviderRepository,
 )
 from app.db.session_manager import session_manager, repository
-from app.dto.qualification_dto import QualificationDto
-from app.mappers.mapper import Mapper
+from app.schemas.qualification.mapper import map_healthcare_provider_entities_to_qualification_dtos
+from app.schemas.qualification.schema import QualificationDto
 
 
 class HealthcareProviderDatabaseServiceInterface(metaclass=ABCMeta):
@@ -20,6 +20,6 @@ class HealthcareProviderDatabaseService(HealthcareProviderDatabaseServiceInterfa
         self,
         healthcare_provider_repository: HealthcareProviderRepository = repository(),
     ) -> Sequence[QualificationDto]:
-        return Mapper.to_qualification_dtos(
+        return map_healthcare_provider_entities_to_qualification_dtos(
             entities=healthcare_provider_repository.get_all()
         )

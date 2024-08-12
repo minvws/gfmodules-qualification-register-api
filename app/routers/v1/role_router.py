@@ -7,8 +7,8 @@ from app.container import get_role_database_service
 from app.db.services.role_database_service import (
     RoleDatabaseServiceInterface,
 )
-from app.dto.RoleDto import RoleDto
 from app.openapi.responses import api_version_header_responses
+from app.schemas.roles.schema import RoleDto
 
 router = APIRouter(prefix="/roles", tags=["roles"])
 

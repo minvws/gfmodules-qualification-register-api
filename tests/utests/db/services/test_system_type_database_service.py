@@ -6,7 +6,7 @@ import pytest
 from app.db.entities.system_type import SystemType
 from app.db.repository_factory import RepositoryFactory
 from app.db.services.system_type_database_service import SystemTypeDatabaseService
-from app.dto.SystemTypeDto import SystemTypeDto
+from app.schemas.system_type.schema import SystemTypeDto
 
 
 @pytest.fixture()

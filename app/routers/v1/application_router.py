@@ -8,8 +8,8 @@ from app.container import get_application_database_service
 from app.db.services.application_database_service import (
     ApplicationDatabaseServiceInterface,
 )
-from app.dto.ApplicationWithVendorDto import ApplicationWithVendorDto
 from app.openapi.responses import api_version_header_responses
+from app.schemas.application.schema import ApplicationWithVendorDto
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/applications", tags=["applications"])

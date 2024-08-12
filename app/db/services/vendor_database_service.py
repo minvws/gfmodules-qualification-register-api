@@ -4,9 +4,9 @@ from typing import Sequence
 
 from app.db.repository.vendor_repository import VendorRepository
 from app.db.session_manager import session_manager, repository
-from app.dto.VendorDto import VendorDto
 from app.exceptions.http_base_exceptions import NotFoundException
-from app.mappers.mapper import Mapper
+from app.schemas.vendor.mapper import map_vendor_entity_to_dto, map_vendor_entities_to_dtos
+from app.schemas.vendor.schema import VendorDto
 
 
 class VendorDatabaseServiceInterface(metaclass=ABCMeta):
@@ -26,10 +26,10 @@ class VendorDatabaseService(VendorDatabaseServiceInterface):
         entity = vendor_repository.get(id=id)
         if entity is None:
             raise NotFoundException()
-        return Mapper.to_vendor_dto(entity=entity)
+        return map_vendor_entity_to_dto(entity=entity)
 
     @session_manager
     def get_all(
         self, vendor_repository: VendorRepository = repository()
     ) -> Sequence[VendorDto]:
-        return Mapper.to_vendor_dtos(entities=vendor_repository.get_all())
+        return map_vendor_entities_to_dtos(entities=vendor_repository.get_all())

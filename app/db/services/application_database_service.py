@@ -4,9 +4,12 @@ from typing import Sequence
 
 from app.db.repository.application_repository import ApplicationRepository
 from app.db.session_manager import session_manager, repository
-from app.dto.ApplicationWithVendorDto import ApplicationWithVendorDto
 from app.exceptions.http_base_exceptions import NotFoundException
-from app.mappers.mapper import Mapper
+from app.schemas.application.mapper import (
+    map_application_entity_to_dto,
+    map_application_entities_to_dtos
+)
+from app.schemas.application.schema import ApplicationWithVendorDto
 
 
 class ApplicationDatabaseServiceInterface(metaclass=ABCMeta):
@@ -34,10 +37,10 @@ class ApplicationDatabaseService(ApplicationDatabaseServiceInterface):
         entity = application_repository.get(id=id)
         if entity is None:
             raise NotFoundException()
-        return Mapper.to_application_dto(entity=entity)
+        return map_application_entity_to_dto(entity=entity)
 
     @session_manager
     def get_all(
         self, application_repository: ApplicationRepository = repository()
     ) -> Sequence[ApplicationWithVendorDto]:
-        return Mapper.to_application_dtos(entities=application_repository.get_all())
+        return map_application_entities_to_dtos(entities=application_repository.get_all())
