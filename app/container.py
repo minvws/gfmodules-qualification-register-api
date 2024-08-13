@@ -1,29 +1,24 @@
 import inject
 
+from gfmodules_python_shared.session.session_factory import DbSessionFactory
+from gfmodules_python_shared.repository.repository_factory import RepositoryFactory
 
 from app.db.db import Database
 from app.config import get_config
-from app.db.db_session_factory import DbSessionFactory
 from app.db.services.application_database_service import (
     ApplicationDatabaseService,
-    ApplicationDatabaseServiceInterface,
 )
-from app.db.repository_factory import RepositoryFactory
 from app.db.services.healthcare_provider_database_service import (
     HealthcareProviderDatabaseService,
-    HealthcareProviderDatabaseServiceInterface,
 )
 from app.db.services.role_database_service import (
     RoleDatabaseService,
-    RoleDatabaseServiceInterface,
 )
 from app.db.services.system_type_database_service import (
     SystemTypeDatabaseService,
-    SystemTypeDatabaseServiceInterface,
 )
 from app.db.services.vendor_database_service import (
     VendorDatabaseService,
-    VendorDatabaseServiceInterface,
 )
 
 
@@ -60,24 +55,24 @@ def get_database() -> Database:
 
 
 def get_healthcare_provider_database_service() -> (
-    HealthcareProviderDatabaseServiceInterface
+    HealthcareProviderDatabaseService
 ):
     return inject.instance(HealthcareProviderDatabaseService)
 
 
-def get_application_database_service() -> ApplicationDatabaseServiceInterface:
+def get_application_database_service() -> ApplicationDatabaseService:
     return inject.instance(ApplicationDatabaseService)
 
 
-def get_role_database_service() -> RoleDatabaseServiceInterface:
+def get_role_database_service() -> RoleDatabaseService:
     return inject.instance(RoleDatabaseService)
 
 
-def get_vendor_database_service() -> VendorDatabaseServiceInterface:
+def get_vendor_database_service() -> VendorDatabaseService:
     return inject.instance(VendorDatabaseService)
 
 
-def get_system_type_database_service() -> SystemTypeDatabaseServiceInterface:
+def get_system_type_database_service() -> SystemTypeDatabaseService:
     return inject.instance(SystemTypeDatabaseService)
 
 

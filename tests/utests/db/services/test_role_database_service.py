@@ -2,9 +2,9 @@ import uuid
 
 import inject
 import pytest
+from gfmodules_python_shared.repository.repository_factory import RepositoryFactory
 
 from app.db.entities.role import Role
-from app.db.repository_factory import RepositoryFactory
 from app.db.services.role_database_service import RoleDatabaseService
 from app.schemas.roles.schema import RoleDto
 

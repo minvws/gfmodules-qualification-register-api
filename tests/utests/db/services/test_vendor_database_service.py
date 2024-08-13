@@ -4,9 +4,11 @@ import inject
 import pytest
 
 from datetime import datetime
+
+from gfmodules_python_shared.repository.repository_factory import RepositoryFactory
+
 from app.db.entities.application import Application
 from app.db.entities.vendor import Vendor
-from app.db.repository_factory import RepositoryFactory
 from app.db.services.vendor_database_service import VendorDatabaseService
 from app.schemas.application_summary.schema import ApplicationSummaryDto
 from app.schemas.vendor.schema import VendorDto

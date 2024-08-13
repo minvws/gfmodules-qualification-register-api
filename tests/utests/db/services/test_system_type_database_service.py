@@ -2,9 +2,9 @@ import uuid
 
 import inject
 import pytest
+from gfmodules_python_shared.repository.repository_factory import RepositoryFactory
 
 from app.db.entities.system_type import SystemType
-from app.db.repository_factory import RepositoryFactory
 from app.db.services.system_type_database_service import SystemTypeDatabaseService
 from app.schemas.system_type.schema import SystemTypeDto
 
