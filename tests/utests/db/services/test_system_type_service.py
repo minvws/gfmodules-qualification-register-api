@@ -4,7 +4,7 @@ from app.db.entities.system_type import SystemType
 from app.schemas.system_type.schema import SystemTypeDto
 
 
-class TestSystemTypeDatabaseService:
+class TestSystemTypeService:
     def test_get(self, system_type_repository, system_type_service):
         uuid_ = uuid.uuid4()
         system_type = SystemType(id=uuid_, name="System Type A", description=None)

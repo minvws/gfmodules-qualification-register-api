@@ -8,7 +8,7 @@ from app.schemas.application_summary.schema import ApplicationSummaryDto
 from app.schemas.vendor.schema import VendorDto
 
 
-class TestVendorDatabaseService:
+class TestVendorService:
     def test_get(self, vendor_repository, vendor_service):
         uuid_ = uuid.uuid4()
         vendor = Vendor(id=uuid_, kvk_number="000000001", trade_name="Vendor A - Trade Name",
