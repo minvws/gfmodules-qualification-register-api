@@ -5,6 +5,17 @@ set -e
 echo "📖 This script will help you running the qualification-register-api for the first time. It will try to setup everything"
 echo "with default values so you can run it directly."
 
+# Get GitHub username and GitHub Personal Authentication Token
+echo "➡️ Getting github credentials"
+GIT_USER=$(git config user.email)
+
+if [ ! -f ~/.gitpat ] ; then
+  echo "⚠️ Github personal access token does not exists, please get a token and store it in your home directory in a file called .gitpat"
+  exit;
+fi
+
+GIT_PAT=$(cat ~/.gitpat)
+
 # Check if we already are configured
 if [ -e .autopilot ] ; then
     echo "⚠️ It seems that you already ran this script. If you want to run it again, please remove the .autopilot file."
@@ -29,7 +40,7 @@ fi
 
 # Build the application docker container
 echo "➡️ Building the application docker container"
-make container-build
+make container-build GIT_USER="${GIT_USER}" GIT_PAT="${GIT_PAT}"
 
 # Run the container
 echo "➡️ Running the application docker container"
