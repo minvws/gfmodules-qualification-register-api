@@ -1,9 +1,11 @@
 import uuid
-from abc import ABCMeta, abstractmethod
 from typing import Sequence
 
+from gfmodules_python_shared.session.session_manager import (
+    session_manager,
+    get_repository,
+)
 from app.db.repository.application_repository import ApplicationRepository
-from app.db.session_manager import session_manager, repository
 from app.exceptions.http_base_exceptions import NotFoundException
 from app.schemas.application.mapper import (
     map_application_entity_to_dto,
@@ -12,27 +14,12 @@ from app.schemas.application.mapper import (
 from app.schemas.application.schema import ApplicationWithVendorDto
 
 
-class ApplicationDatabaseServiceInterface(metaclass=ABCMeta):
-    @abstractmethod
-    def get(
-        self,
-        id_: uuid.UUID,
-        application_repository: ApplicationRepository = repository(),
-    ) -> ApplicationWithVendorDto: ...
-
-    @abstractmethod
-    def get_all(
-        self,
-        application_repository: ApplicationRepository = repository(),
-    ) -> Sequence[ApplicationWithVendorDto]: ...
-
-
-class ApplicationDatabaseService(ApplicationDatabaseServiceInterface):
+class ApplicationDatabaseService:
     @session_manager
     def get(
         self,
         id: uuid.UUID,
-        application_repository: ApplicationRepository = repository(),
+        application_repository: ApplicationRepository = get_repository(),
     ) -> ApplicationWithVendorDto:
         entity = application_repository.get(id=id)
         if entity is None:
@@ -41,6 +28,6 @@ class ApplicationDatabaseService(ApplicationDatabaseServiceInterface):
 
     @session_manager
     def get_all(
-        self, application_repository: ApplicationRepository = repository()
+        self, application_repository: ApplicationRepository = get_repository()
     ) -> Sequence[ApplicationWithVendorDto]:
         return map_application_entities_to_dtos(entities=application_repository.get_all())
