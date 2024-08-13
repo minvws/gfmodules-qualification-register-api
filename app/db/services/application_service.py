@@ -1,5 +1,5 @@
 import uuid
-from typing import Sequence
+from typing import List
 
 from gfmodules_python_shared.session.session_manager import (
     session_manager,
@@ -14,7 +14,7 @@ from app.schemas.application.mapper import (
 from app.schemas.application.schema import ApplicationWithVendorDto
 
 
-class ApplicationDatabaseService:
+class ApplicationService:
     @session_manager
     def get(
         self,
@@ -29,5 +29,5 @@ class ApplicationDatabaseService:
     @session_manager
     def get_all(
         self, application_repository: ApplicationRepository = get_repository()
-    ) -> Sequence[ApplicationWithVendorDto]:
-        return map_application_entities_to_dtos(entities=application_repository.get_all())
+    ) -> List[ApplicationWithVendorDto]:
+        return map_application_entities_to_dtos(entities=application_repository.get_many())

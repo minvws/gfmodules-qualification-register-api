@@ -1,12 +1,10 @@
 import logging
-from typing import Sequence
+from typing import List
 
 from fastapi import APIRouter, Depends
 
-from app.container import get_healthcare_provider_database_service
-from app.db.services.healthcare_provider_database_service import (
-    HealthcareProviderDatabaseServiceInterface,
-)
+from app.container import get_healthcare_provider_service
+from app.db.services.healthcare_provider_service import HealthcareProviderService
 from app.openapi.responses import api_version_header_responses
 from app.schemas.qualification.schema import QualificationDto
 
@@ -19,8 +17,8 @@ PAGE_LIMIT = 25
 
 @router.get("", summary="Get all qualifications based on the supplied query params", responses={**api_version_header_responses([200])})
 def get_all(
-    healthcare_provider_database_service: HealthcareProviderDatabaseServiceInterface = Depends(
-        get_healthcare_provider_database_service
+    healthcare_provider_service: HealthcareProviderService = Depends(
+        get_healthcare_provider_service
     ),
-) -> Sequence[QualificationDto]:
-    return healthcare_provider_database_service.get_all()
+) -> List[QualificationDto]:
+    return healthcare_provider_service.get_all()

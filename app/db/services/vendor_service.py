@@ -1,5 +1,5 @@
 import uuid
-from typing import Sequence
+from typing import List
 
 from gfmodules_python_shared.session.session_manager import get_repository, session_manager
 
@@ -9,7 +9,7 @@ from app.schemas.vendor.mapper import map_vendor_entity_to_dto, map_vendor_entit
 from app.schemas.vendor.schema import VendorDto
 
 
-class VendorDatabaseService:
+class VendorService:
 
     @session_manager
     def get(
@@ -23,5 +23,5 @@ class VendorDatabaseService:
     @session_manager
     def get_all(
         self, vendor_repository: VendorRepository = get_repository()
-    ) -> Sequence[VendorDto]:
-        return map_vendor_entities_to_dtos(entities=vendor_repository.get_all())
+    ) -> List[VendorDto]:
+        return map_vendor_entities_to_dtos(entities=vendor_repository.get_many())

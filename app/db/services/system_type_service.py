@@ -1,5 +1,5 @@
 import uuid
-from typing import Sequence
+from typing import List
 
 from gfmodules_python_shared.session.session_manager import session_manager, get_repository
 
@@ -9,7 +9,7 @@ from app.schemas.system_type.mapper import map_system_type_entities_to_dtos, map
 from app.schemas.system_type.schema import SystemTypeDto
 
 
-class SystemTypeDatabaseService:
+class SystemTypeService:
     @session_manager
     def get(
         self, id: uuid.UUID, system_type_repository: SystemTypeRepository = get_repository()
@@ -22,5 +22,5 @@ class SystemTypeDatabaseService:
     @session_manager
     def get_all(
         self, system_type_repository: SystemTypeRepository = get_repository()
-    ) -> Sequence[SystemTypeDto]:
-        return map_system_type_entities_to_dtos(entities=system_type_repository.get_all())
+    ) -> List[SystemTypeDto]:
+        return map_system_type_entities_to_dtos(entities=system_type_repository.get_many())

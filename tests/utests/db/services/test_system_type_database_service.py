@@ -1,46 +1,26 @@
 import uuid
 
-import inject
-import pytest
-from gfmodules_python_shared.repository.repository_factory import RepositoryFactory
-
 from app.db.entities.system_type import SystemType
-from app.db.services.system_type_database_service import SystemTypeDatabaseService
 from app.schemas.system_type.schema import SystemTypeDto
 
 
-@pytest.fixture()
-def system_type_repository(mocker):
-    system_type_repository = mocker.Mock()
-    mocker.patch.object(
-        inject.instance(RepositoryFactory),
-        "get_repository",
-        return_value=system_type_repository,
-    )
-    yield system_type_repository
+class TestSystemTypeDatabaseService:
+    def test_get(self, system_type_repository, system_type_service):
+        uuid_ = uuid.uuid4()
+        system_type = SystemType(id=uuid_, name="System Type A", description=None)
+        expected = SystemTypeDto(id=uuid_, name="System Type A", description=None)
+        system_type_repository.create(system_type)
 
+        actual = system_type_service.get(uuid_)
 
-def test_get(injector, mocker, system_type_repository):
-    uuid_ = uuid.uuid4()
-    system_type = SystemType(id=uuid_, name="System Type A", description=None)
-    expected = SystemTypeDto(id=uuid_, name="System Type A", description=None)
+        assert actual == expected
 
-    mocker.patch.object(system_type_repository, "get", return_value=system_type)
+    def test_get_all(self, system_type_repository, system_type_service):
+        uuid_ = uuid.uuid4()
+        system_type = SystemType(id=uuid_, name="System Type A", description=None)
+        expected = [SystemTypeDto(id=uuid_, name="System Type A", description=None)]
+        system_type_repository.create(system_type)
 
-    service = SystemTypeDatabaseService()
-    actual = service.get(uuid_)
+        actual = system_type_service.get_all()
 
-    assert actual == expected
-
-
-def test_get_all(injector, mocker, system_type_repository):
-    uuid_ = uuid.uuid4()
-    system_types = [SystemType(id=uuid_, name="System Type A", description=None)]
-    expected = [SystemTypeDto(id=uuid_, name="System Type A", description=None)]
-
-    mocker.patch.object(system_type_repository, "get_all", return_value=system_types)
-
-    service = SystemTypeDatabaseService()
-    actual = service.get_all()
-
-    assert actual == expected
+        assert actual == expected

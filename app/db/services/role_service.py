@@ -1,5 +1,5 @@
 import uuid
-from typing import Sequence
+from typing import List
 
 from gfmodules_python_shared.session.session_manager import session_manager, get_repository
 
@@ -9,7 +9,7 @@ from app.schemas.roles.mapper import map_role_entity_to_dto, map_role_entities_t
 from app.schemas.roles.schema import RoleDto
 
 
-class RoleDatabaseService:
+class RoleService:
     @session_manager
     def get(
         self, id_: uuid.UUID, role_repository: RoleRepository = get_repository()
@@ -22,5 +22,5 @@ class RoleDatabaseService:
     @session_manager
     def get_all(
         self, role_repository: RoleRepository = get_repository()
-    ) -> Sequence[RoleDto]:
-        return map_role_entities_to_dtos(entities=role_repository.get_all())
+    ) -> List[RoleDto]:
+        return map_role_entities_to_dtos(entities=role_repository.get_many())
