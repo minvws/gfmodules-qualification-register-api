@@ -1,10 +1,11 @@
-import uuid
 from typing import List
 
 from gfmodules_python_shared.session.session_manager import (
     session_manager,
     get_repository,
 )
+from uuid import UUID
+
 from app.db.repository.application_repository import ApplicationRepository
 from app.exceptions.http_base_exceptions import NotFoundException
 from app.schemas.application.mapper import (
@@ -18,7 +19,7 @@ class ApplicationService:
     @session_manager
     def get(
         self,
-        id: uuid.UUID,
+        id: UUID,
         application_repository: ApplicationRepository = get_repository(),
     ) -> ApplicationWithVendorDto:
         entity = application_repository.get(id=id)

@@ -1,6 +1,6 @@
-import uuid
-
 from datetime import datetime
+
+from uuid import uuid4
 
 from app.db.entities.application import Application
 from app.db.entities.vendor import Vendor
@@ -10,7 +10,7 @@ from app.schemas.vendor.schema import VendorDto
 
 class TestVendorService:
     def test_get(self, vendor_repository, vendor_service):
-        uuid_ = uuid.uuid4()
+        uuid_ = uuid4()
         vendor = Vendor(id=uuid_, kvk_number="000000001", trade_name="Vendor A - Trade Name",
                         statutory_name="Vendor A - Statutory Name")
         expected = VendorDto(id=uuid_, kvk_number="000000001", trade_name="Vendor A - Trade Name",
@@ -23,8 +23,8 @@ class TestVendorService:
         assert actual == expected
 
     def test_get_all(self, vendor_repository, vendor_service):
-        uuid_a = uuid.uuid4()
-        uuid_b = uuid.uuid4()
+        uuid_a = uuid4()
+        uuid_b = uuid4()
 
         vendor_a = Vendor(id=uuid_a, kvk_number="000000001", trade_name="Vendor A - Trade Name",
                           statutory_name="Vendor A - Statutory Name")
@@ -43,13 +43,13 @@ class TestVendorService:
         assert actual == expected
 
     def test_get_with_applications(self, vendor_repository, vendor_service):
-        uuid_a = uuid.uuid4()
-        uuid_b = uuid.uuid4()
+        uuid_a = uuid4()
+        uuid_b = uuid4()
 
-        application_a_vendor_a_uuid = uuid.uuid4()
-        application_b_vendor_a_uuid = uuid.uuid4()
-        application_a_vendor_b_uuid = uuid.uuid4()
-        application_b_vendor_b_uuid = uuid.uuid4()
+        application_a_vendor_a_uuid = uuid4()
+        application_b_vendor_a_uuid = uuid4()
+        application_a_vendor_b_uuid = uuid4()
+        application_b_vendor_b_uuid = uuid4()
 
         _datetime = datetime.now()
 

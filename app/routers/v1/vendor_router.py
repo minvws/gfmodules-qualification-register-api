@@ -1,7 +1,7 @@
-import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, Path
+from uuid import UUID
 
 from app.container import get_vendor_service
 from app.db.services.vendor_service import VendorService
@@ -22,7 +22,7 @@ def get_all(
 
 @router.get("/{id}", summary="Get vendor by id", responses={**api_version_header_responses([200, 404, 422])})
 def get(
-        id_: uuid.UUID = Path(alias="id"),
+        id_: UUID = Path(alias="id"),
         vendor_service: VendorService = Depends(
             get_vendor_service
         ),

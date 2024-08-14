@@ -1,7 +1,7 @@
-import uuid
 from typing import List
 
 from gfmodules_python_shared.session.session_manager import session_manager, get_repository
+from uuid import UUID
 
 from app.db.repository.role_repository import RoleRepository
 from app.exceptions.http_base_exceptions import NotFoundException
@@ -12,7 +12,7 @@ from app.schemas.roles.schema import RoleDto
 class RoleService:
     @session_manager
     def get(
-        self, id_: uuid.UUID, role_repository: RoleRepository = get_repository()
+        self, id_: UUID, role_repository: RoleRepository = get_repository()
     ) -> RoleDto:
         entity = role_repository.get(id=id_)
         if entity is None:

@@ -1,8 +1,8 @@
 import logging
-import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, Path
+from uuid import UUID
 
 from app.container import get_application_service
 from app.db.services.application_service import ApplicationService
@@ -24,7 +24,7 @@ def get_all(
 
 @router.get("/{id}", summary="Get application by id", responses={**api_version_header_responses([200, 404, 422])})
 def get(
-    id_: uuid.UUID = Path(alias="id"),
+    id_: UUID = Path(alias="id"),
     application_service: ApplicationService = Depends(
         get_application_service
     ),

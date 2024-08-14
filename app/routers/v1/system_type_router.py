@@ -1,7 +1,7 @@
-import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, Path
+from uuid import UUID
 
 from app.container import get_system_type_service
 from app.db.services.system_type_service import SystemTypeService
@@ -22,7 +22,7 @@ def get_all(
 
 @router.get("/{id}", summary="Get system type by id", responses={**api_version_header_responses([200, 404, 422])})
 def get(
-    id_: uuid.UUID = Path(alias="id"),
+    id_: UUID = Path(alias="id"),
     system_type_service: SystemTypeService = Depends(
         get_system_type_service
     ),
