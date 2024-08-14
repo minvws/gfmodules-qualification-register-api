@@ -1,29 +1,24 @@
 import inject
 
+from gfmodules_python_shared.session.session_factory import DbSessionFactory
+from gfmodules_python_shared.repository.repository_factory import RepositoryFactory
 
 from app.db.db import Database
 from app.config import get_config
-from app.db.db_session_factory import DbSessionFactory
-from app.db.services.application_database_service import (
-    ApplicationDatabaseService,
-    ApplicationDatabaseServiceInterface,
+from app.db.services.application_service import (
+    ApplicationService,
 )
-from app.db.repository_factory import RepositoryFactory
-from app.db.services.healthcare_provider_database_service import (
-    HealthcareProviderDatabaseService,
-    HealthcareProviderDatabaseServiceInterface,
+from app.db.services.healthcare_provider_service import (
+    HealthcareProviderService,
 )
-from app.db.services.role_database_service import (
-    RoleDatabaseService,
-    RoleDatabaseServiceInterface,
+from app.db.services.role_service import (
+    RoleService,
 )
-from app.db.services.system_type_database_service import (
-    SystemTypeDatabaseService,
-    SystemTypeDatabaseServiceInterface,
+from app.db.services.system_type_service import (
+    SystemTypeService,
 )
-from app.db.services.vendor_database_service import (
-    VendorDatabaseService,
-    VendorDatabaseServiceInterface,
+from app.db.services.vendor_service import (
+    VendorService,
 )
 
 
@@ -33,52 +28,52 @@ def container_config(binder: inject.Binder) -> None:
     db = Database(dsn=config.database.dsn)
     binder.bind(Database, db)
 
-    db_session_factory = DbSessionFactory(db.engine)
-    binder.bind(DbSessionFactory, db_session_factory)
+    session_factory = DbSessionFactory(db.engine)
+    binder.bind(DbSessionFactory, session_factory)
 
-    healthcare_provider_database_service = HealthcareProviderDatabaseService()
-    binder.bind(HealthcareProviderDatabaseService, healthcare_provider_database_service)
-
-    application_database_service = ApplicationDatabaseService()
-    binder.bind(ApplicationDatabaseService, application_database_service)
-
-    repository_factory = RepositoryFactory(db.engine)
+    repository_factory = RepositoryFactory()
     binder.bind(RepositoryFactory, repository_factory)
 
-    role_database_service = RoleDatabaseService()
-    binder.bind(RoleDatabaseService, role_database_service)
+    healthcare_provider_service = HealthcareProviderService()
+    binder.bind(HealthcareProviderService, healthcare_provider_service)
 
-    system_type_database_service = SystemTypeDatabaseService()
-    binder.bind(SystemTypeDatabaseService, system_type_database_service)
+    application_service = ApplicationService()
+    binder.bind(ApplicationService, application_service)
 
-    vendor_database_service = VendorDatabaseService()
-    binder.bind(VendorDatabaseService, vendor_database_service)
+    role_service = RoleService()
+    binder.bind(RoleService, role_service)
+
+    system_type_service = SystemTypeService()
+    binder.bind(SystemTypeService, system_type_service)
+
+    vendor_service = VendorService()
+    binder.bind(VendorService, vendor_service)
 
 
 def get_database() -> Database:
     return inject.instance(Database)
 
 
-def get_healthcare_provider_database_service() -> (
-    HealthcareProviderDatabaseServiceInterface
+def get_healthcare_provider_service() -> (
+    HealthcareProviderService
 ):
-    return inject.instance(HealthcareProviderDatabaseService)
+    return inject.instance(HealthcareProviderService)
 
 
-def get_application_database_service() -> ApplicationDatabaseServiceInterface:
-    return inject.instance(ApplicationDatabaseService)
+def get_application_service() -> ApplicationService:
+    return inject.instance(ApplicationService)
 
 
-def get_role_database_service() -> RoleDatabaseServiceInterface:
-    return inject.instance(RoleDatabaseService)
+def get_role_service() -> RoleService:
+    return inject.instance(RoleService)
 
 
-def get_vendor_database_service() -> VendorDatabaseServiceInterface:
-    return inject.instance(VendorDatabaseService)
+def get_vendor_service() -> VendorService:
+    return inject.instance(VendorService)
 
 
-def get_system_type_database_service() -> SystemTypeDatabaseServiceInterface:
-    return inject.instance(SystemTypeDatabaseService)
+def get_system_type_service() -> SystemTypeService:
+    return inject.instance(SystemTypeService)
 
 
 if not inject.is_configured():

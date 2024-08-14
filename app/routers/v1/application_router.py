@@ -1,13 +1,11 @@
 import logging
-import uuid
-from typing import Sequence
+from typing import List
 
 from fastapi import APIRouter, Depends, Path
+from uuid import UUID
 
-from app.container import get_application_database_service
-from app.db.services.application_database_service import (
-    ApplicationDatabaseServiceInterface,
-)
+from app.container import get_application_service
+from app.db.services.application_service import ApplicationService
 from app.openapi.responses import api_version_header_responses
 from app.schemas.application.schema import ApplicationWithVendorDto
 
@@ -17,18 +15,18 @@ router = APIRouter(prefix="/applications", tags=["applications"])
 
 @router.get("", summary="Get all applications", responses={**api_version_header_responses([200])})
 def get_all(
-    application_database_service: ApplicationDatabaseServiceInterface = Depends(
-        get_application_database_service
+    application_service: ApplicationService = Depends(
+        get_application_service
     ),
-) -> Sequence[ApplicationWithVendorDto]:
-    return application_database_service.get_all()
+) -> List[ApplicationWithVendorDto]:
+    return application_service.get_all()
 
 
 @router.get("/{id}", summary="Get application by id", responses={**api_version_header_responses([200, 404, 422])})
 def get(
-    id_: uuid.UUID = Path(alias="id"),
-    application_database_service: ApplicationDatabaseServiceInterface = Depends(
-        get_application_database_service
+    id_: UUID = Path(alias="id"),
+    application_service: ApplicationService = Depends(
+        get_application_service
     ),
 ) -> ApplicationWithVendorDto:
-    return application_database_service.get(id_)
+    return application_service.get(id_)
