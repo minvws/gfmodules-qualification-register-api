@@ -34,6 +34,14 @@ If you run Linux, make sure you export your user ID and group ID to synchronize 
 export NEW_UID=$(id -u)
 export NEW_GID=$(id -g)
 
-When you're ready, build the application with: make container-build.
+The application uses a private shared python library. To be able to install this library inside docker using poetry the
+auth.toml file needs to exist. Run to following shell script with your credentials to setup the auth.toml. You can
+generate a new access token(repo) with the full repo scope or read more about managing your personal access tokens.
 
-Run make up to start the application.
+```
+echo """[http-basic.git-minvws-gfmodules-python-shared]
+username = "your-github-username"
+password = "your-github-pat"""" > ~/.auth.toml2
+```
+
+When you're ready, run the application with: `make autopilot`
