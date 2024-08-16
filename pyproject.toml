@@ -56,3 +56,7 @@ cache_dir = "~/.cache/pytest"
 testpaths = [
     "tests",
 ]
+
+[tool.coverage.run]
+branch = false
+relative_files = false
