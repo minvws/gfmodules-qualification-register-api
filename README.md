@@ -41,7 +41,7 @@ generate a new access token(repo) with the full repo scope or read more about ma
 ```
 echo """[http-basic.git-minvws-gfmodules-python-shared]
 username = "your-github-username"
-password = "your-github-pat"""" > ~/.auth.toml2
+password = "your-github-pat"""" > ~/.auth.toml
 ```
 
 When you're ready, run the application with: `make autopilot`
