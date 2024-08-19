@@ -8,7 +8,12 @@ from gfmodules_python_shared.session.session_factory import DbSessionFactory
 
 from app.db.db import Database
 from app.db.repository.application_repository import ApplicationRepository
-from app.db.repository.healthcare_provider_repository import HealthcareProviderRepository
+from app.db.repository.application_version_qualification_repository import (
+    ApplicationVersionQualificationRepository,
+)
+from app.db.repository.healthcare_provider_repository import (
+    HealthcareProviderRepository,
+)
 from app.db.repository.role_repository import RoleRepository
 from app.db.repository.system_type_repository import SystemTypeRepository
 from app.db.repository.vendor_repository import VendorRepository
@@ -16,6 +21,7 @@ from app.db.services.application_service import ApplicationService
 from app.db.services.healthcare_provider_service import HealthcareProviderService
 from app.db.services.role_service import RoleService
 from app.db.services.system_type_service import SystemTypeService
+from app.db.services.vendor_qualification_service import VendorQualificationService
 from app.db.services.vendor_service import VendorService
 
 
@@ -69,6 +75,13 @@ def role_repository(session: DbSession) -> RoleRepository:
 
 
 @pytest.fixture
+def application_version_qualification_repository(
+    session: DbSession,
+) -> ApplicationVersionQualificationRepository:
+    return ApplicationVersionQualificationRepository(db_session=session)
+
+
+@pytest.fixture
 def system_type_service(session: DbSession) -> SystemTypeService:
     return SystemTypeService()
 
@@ -86,3 +99,8 @@ def vendor_service(session: DbSession) -> VendorService:
 @pytest.fixture
 def vendor_repository(session: DbSession) -> VendorRepository:
     return VendorRepository(db_session=session)
+
+
+@pytest.fixture
+def vendor_qualification_service() -> VendorQualificationService:
+    return VendorQualificationService()

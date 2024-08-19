@@ -17,6 +17,7 @@ from app.db.services.role_service import (
 from app.db.services.system_type_service import (
     SystemTypeService,
 )
+from app.db.services.vendor_qualification_service import VendorQualificationService
 from app.db.services.vendor_service import (
     VendorService,
 )
@@ -49,6 +50,9 @@ def container_config(binder: inject.Binder) -> None:
     vendor_service = VendorService()
     binder.bind(VendorService, vendor_service)
 
+    vendor_qualification_service = VendorQualificationService()
+    binder.bind(VendorQualificationService, vendor_qualification_service)
+
 
 def get_database() -> Database:
     return inject.instance(Database)
@@ -74,6 +78,9 @@ def get_vendor_service() -> VendorService:
 
 def get_system_type_service() -> SystemTypeService:
     return inject.instance(SystemTypeService)
+
+def get_vendor_qualification_service() -> VendorQualificationService:
+    return inject.instance(VendorQualificationService)
 
 
 if not inject.is_configured():
