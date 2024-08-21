@@ -16,7 +16,7 @@ class ApplicationVersionQualification(Base):
     defined protocol version.
     """
 
-    __tablename__ = "application_versions_qualifications"
+    __tablename__ = "protocol_application_qualifications"
     __table_args__ = (
         PrimaryKeyConstraint(
             "application_version_id",
