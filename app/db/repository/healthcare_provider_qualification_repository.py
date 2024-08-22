@@ -18,7 +18,10 @@ class HealthcareProviderQualificationRepository(
         super().__init__(session=db_session, cls_model=HealthcareProviderQualification)
 
     def get_qualified_healthcare_providers(
-        self, **kwargs: TArgs
+        self,
+        limit: int | None = None,
+        offset: int | None = None,
+        **kwargs: TArgs,
     ) -> Sequence[HealthcareProviderQualification]:
         stmt = (
             select(HealthcareProviderQualification)
@@ -28,6 +31,8 @@ class HealthcareProviderQualificationRepository(
                     HealthcareProviderQualification.protocol_version
                 ).selectinload(ProtocolVersion.protocol)
             )
+            .limit(limit)
+            .offset(offset)
             .filter_by(**kwargs)
         )
         results = self.session.scalars_all(stmt)

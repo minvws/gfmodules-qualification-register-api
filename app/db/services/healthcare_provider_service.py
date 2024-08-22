@@ -3,7 +3,6 @@ from gfmodules_python_shared.session.session_manager import (
     get_repository,
     session_manager,
 )
-from typing import List
 
 from gfmodules_python_shared.session.session_manager import (
     get_repository,
@@ -50,9 +49,14 @@ class HealthcareProviderService:
     @session_manager
     def get_qualified_healthcare_providers(
         self,
+        limit: int,
+        offset: int,
         healthcare_providers_qualification_repository: HealthcareProviderQualificationRepository = get_repository(),
-    ) -> List[QualifiedHealthcareProviderDTO]:
+    ) -> Page[QualifiedHealthcareProviderDTO]:
         qualified_providers = (
             healthcare_providers_qualification_repository.get_qualified_healthcare_providers()
         )
-        return flatten_healthcare_provider_qualification(qualified_providers)
+        dto = flatten_healthcare_provider_qualification(qualified_providers)
+        total = healthcare_providers_qualification_repository.count()
+
+        return Page(items=dto, total=total, limit=limit, offset=offset)

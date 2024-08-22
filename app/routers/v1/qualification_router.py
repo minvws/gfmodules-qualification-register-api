@@ -54,10 +54,13 @@ def get_vendor_qualifications(
 
 @router.get(
     "/healthcare-providers",
-    summary="Get all qualifications for healthcare providers",
+    summary="Get paginated qualifications for healthcare providers",
     responses={**api_version_header_responses([200])},
 )
 def get_healthcare_provider_qualifications(
+    query: Annotated[PaginationQueryParams, Depends()],
     service: HealthcareProviderService = Depends(get_healthcare_provider_service),
-) -> List[QualifiedHealthcareProviderDTO]:
-    return service.get_qualified_healthcare_providers()
+) -> Page[QualifiedHealthcareProviderDTO]:
+    return service.get_qualified_healthcare_providers(
+        limit=query.limit, offset=query.offset
+    )

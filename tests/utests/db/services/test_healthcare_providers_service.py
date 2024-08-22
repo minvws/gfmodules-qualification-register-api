@@ -1,5 +1,7 @@
 import datetime
 
+from gfmodules_python_shared.schema.pagination.page_schema import Page
+
 from app.db.entities.application import Application
 from app.db.entities.application_version import ApplicationVersion
 from app.db.entities.application_version_qualification import (
@@ -70,7 +72,7 @@ class TestHealthcareProvidersService:
         healthcare_provider_qualification_repository.create(
             mock_healthcare_provider_qualification
         )
-        expected_qualified_providers = [
+        data = [
             QualifiedHealthcareProviderDTO(
                 provider_id=mock_healthcare_provider.id,
                 provider_name=mock_protocol.name,
@@ -81,8 +83,16 @@ class TestHealthcareProvidersService:
                 qualification_date=mock_healthcare_provider_qualification.qualification_date,
             )
         ]
+        expected_qualified_providers = Page(
+            items=data,
+            limit=10,
+            offset=0,
+            total=1,
+        )
         actual_qualified_providers = (
-            healthcare_provider_service.get_qualified_healthcare_providers()
+            healthcare_provider_service.get_qualified_healthcare_providers(
+                limit=10, offset=0
+            )
         )
 
         assert expected_qualified_providers == actual_qualified_providers
