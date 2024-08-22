@@ -6,7 +6,7 @@ from app.db.services.healthcare_provider_service import HealthcareProviderServic
 from app.openapi.responses import api_version_header_responses
 from app.schemas.healthcare_provider.schema import HealthcareProviderDto
 
-router = APIRouter(prefix="/healthcare-provider", tags=["healthcare provider"])
+router = APIRouter(prefix="/healthcare-providers", tags=["healthcare providers"])
 
 
 @router.get(
