@@ -128,3 +128,24 @@ class TestHealthcareProvidersService:
         healthcare_provider_repository.create(mock_healthcare_provider)
         with pytest.raises(NotFoundException):
             healthcare_provider_service.get(provider_id="some wrong id")
+
+    def get_paginated_should_succeed(
+        self,
+        mock_healthcare_provider: HealthcareProvider,
+        healthcare_provider_service: HealthcareProviderService,
+        healthcare_provider_repository: HealthcareProviderRepository,
+    ):
+        healthcare_provider_repository.create(mock_healthcare_provider)
+        data = HealthcareProviderDto(
+            id=mock_healthcare_provider.id,
+            ura_code=mock_healthcare_provider.ura_code,
+            agb_code=mock_healthcare_provider.agb_code,
+            trade_name=mock_healthcare_provider.trade_name,
+            statutory_name=mock_healthcare_provider.statutory_name,
+        )
+        expected_healthcare_providers = Page(items=data, limit=10, offset=0, total=1)
+        actual_healthcare_providers = healthcare_provider_service.get_paginated(
+            limit=10, offset=0
+        )
+
+        assert expected_healthcare_providers == actual_healthcare_providers
