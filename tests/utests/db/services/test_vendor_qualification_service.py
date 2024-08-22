@@ -1,8 +1,6 @@
 import datetime
 
 from app.db.entities.application import Application
-from app.db.entities.application_role import ApplicationRole
-from app.db.entities.application_type import ApplicationType
 from app.db.entities.application_version import ApplicationVersion
 from app.db.entities.application_version_qualification import (
     ApplicationVersionQualification,
@@ -24,46 +22,24 @@ class TestVendorQualityService:
 
     def test_get_paginated_should_return_paginated_vendor_qualifications(
         self,
+        mock_vendor: Vendor,
+        mock_application: Application,
+        mock_application_version: ApplicationVersion,
+        mock_system_type: SystemType,
+        mock_role: Role,
+        mock_protocol: Protocol,
+        mock_protocol_version: ProtocolVersion,
         vendor_qualification_service: VendorQualificationService,
         application_repository: ApplicationRepository,
         application_version_qualification_repository: ApplicationVersionQualificationRepository,
     ):
-        mock_vendor = Vendor(
-            kvk_number="example",
-            trade_name="example",
-            statutory_name="example",
-        )
-        mock_application_version = ApplicationVersion(version="example")
-        mock_system_type = SystemType(name="example")
-        mock_role = Role(name="example")
-        mock_application = Application(
-            name="example",
-            vendor=mock_vendor,
-            versions=[mock_application_version],
-            system_types=[],
-            roles=[],
-        )
-        mock_application_role = ApplicationRole(
-            application=mock_application, role=mock_role
-        )
-        mock_application_type = ApplicationType(
-            application=mock_application, system_type=mock_system_type
-        )
-        mock_application.system_types.append(mock_application_type)
-        mock_application.roles.append(mock_application_role)
-        application_repository.create(mock_application)
-
-        mock_protocol_version = ProtocolVersion(version="example")
-        mock_protocol = Protocol(
-            protocol_type="InformationStandard",
-            name="example",
-            versions=[mock_protocol_version],
-        )
         mock_application_qualification = ApplicationVersionQualification(
             application_version=mock_application_version,
             protocol_version=mock_protocol_version,
             qualification_date=datetime.date.today(),
         )
+
+        application_repository.create(mock_application)
         application_version_qualification_repository.create(
             mock_application_qualification
         )
