@@ -10,4 +10,6 @@ class HealthcareProviderDto(BaseModelConfig):
     id: UUID
     ura_code: str
     agb_code: str
+    trade_name: str
+    statutory_name: str
     application_versions: List[ApplicationVersionDto] = []
