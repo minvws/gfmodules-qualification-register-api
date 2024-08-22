@@ -1,5 +1,6 @@
 import datetime
 
+import pytest
 from gfmodules_python_shared.schema.pagination.page_schema import Page
 
 from app.db.entities.application import Application
@@ -25,6 +26,8 @@ from app.db.repository.healthcare_provider_repository import (
 )
 from app.db.repository.protocol_repository import ProtocolRepository
 from app.db.services.healthcare_provider_service import HealthcareProviderService
+from app.exceptions.http_base_exceptions import NotFoundException
+from app.schemas.healthcare_provider.schema import HealthcareProviderDto
 from app.schemas.healthcare_provider_qualification.schema import (
     QualifiedHealthcareProviderDTO,
 )
@@ -96,3 +99,32 @@ class TestHealthcareProvidersService:
         )
 
         assert expected_qualified_providers == actual_qualified_providers
+
+    def get_should_succeed(
+        self,
+        mock_healthcare_provider: HealthcareProvider,
+        healthcare_provider_service: HealthcareProviderService,
+        healthcare_provider_repository: HealthcareProviderRepository,
+    ):
+        healthcare_provider_repository.create(mock_healthcare_provider)
+
+        expected_healthcare_provider = HealthcareProviderDto(
+            id=mock_healthcare_provider.id,
+            ura_code=mock_healthcare_provider.ura_code,
+            agb_code=mock_healthcare_provider.agb_code,
+        )
+        actual_healthcare_provider = healthcare_provider_service.get(
+            provider_id=mock_healthcare_provider.id
+        )
+
+        assert expected_healthcare_provider == actual_healthcare_provider
+
+    def get_should_fail_when_provided_incorrect_id(
+        self,
+        mock_healthcare_provider: HealthcareProvider,
+        healthcare_provider_service: HealthcareProviderService,
+        healthcare_provider_repository: HealthcareProviderRepository,
+    ):
+        healthcare_provider_repository.create(mock_healthcare_provider)
+        with pytest.raises(NotFoundException):
+            healthcare_provider_service.get(provider_id="some wrong id")

@@ -13,6 +13,9 @@ from app.routers.v1.application_router import router as application_router
 from app.routers.v1.role_router import router as role_router
 from app.routers.v1.system_type_router import router as system_type_router
 from app.routers.v1.vendor_router import router as vendor_router
+from app.routers.v1.healthcare_provider_router import (
+    router as healthcare_provider_router,
+)
 
 from app.config import get_config
 
@@ -42,7 +45,12 @@ def get_uvicorn_params() -> dict[str, Any]:
 
 
 def run() -> None:
-    uvicorn.run("app.fastapi_application:create_fastapi_app", **get_uvicorn_params(), reload_delay=1, reload_dirs="app")
+    uvicorn.run(
+        "app.fastapi_application:create_fastapi_app",
+        **get_uvicorn_params(),
+        reload_delay=1,
+        reload_dirs="app",
+    )
 
 
 def create_fastapi_app() -> FastAPI:
@@ -57,13 +65,10 @@ def create_fastapi_app() -> FastAPI:
             health_router,
         ],
         description="This is the documentation for the root endpoints. "
-                    "For the rest of the API documentation see the [/v1/docs](/v1/docs).",
+        "For the rest of the API documentation see the [/v1/docs](/v1/docs).",
         openapi_tags=[
-            {
-                "name": "health",
-                "description": "Health check endpoints"
-            },
-        ]
+            {"name": "health", "description": "Health check endpoints"},
+        ],
     )
 
     # v1 api
@@ -75,6 +80,7 @@ def create_fastapi_app() -> FastAPI:
             role_router,
             system_type_router,
             vendor_router,
+            healthcare_provider_router,
         ],
         api_version="1.0.0",
         description="This is the documentation for the /v1 endpoints.",
@@ -93,8 +99,8 @@ def create_fastapi_app() -> FastAPI:
             },
             {
                 "name": "vendors",
-            }
-        ]
+            },
+        ],
     )
     fastapi_mount_api(root_fastapi=fastapi, mount_path="/v1", api=fastapi_v1)
 
