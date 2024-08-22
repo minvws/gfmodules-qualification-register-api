@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
 from uuid import UUID
 
 from app.container import get_healthcare_provider_service
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/healthcare-providers", tags=["healthcare providers"]
     responses={**api_version_header_responses([200, 404, 422])},
 )
 def get(
-    provider_id: UUID,
+    id_: UUID = Path(alias="id"),
     service: HealthcareProviderService = Depends(get_healthcare_provider_service),
 ) -> HealthcareProviderDto:
-    return service.get(provider_id)
+    return service.get(id_)
