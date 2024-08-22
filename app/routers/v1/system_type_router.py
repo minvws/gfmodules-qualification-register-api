@@ -1,7 +1,10 @@
-from typing import List
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
 from uuid import UUID
+
+from gfmodules_python_shared.schema.pagination.page_schema import Page
+from gfmodules_python_shared.schema.pagination.pagination_query_params_schema import PaginationQueryParams
 
 from app.container import get_system_type_service
 from app.db.services.system_type_service import SystemTypeService
@@ -12,12 +15,13 @@ router = APIRouter(prefix="/system-types", tags=["system types"])
 
 
 @router.get("", summary="Get all system types", responses={**api_version_header_responses([200])})
-def get_all(
+def get_paginated(
+    query: Annotated[PaginationQueryParams, Depends()],
     system_type_service: SystemTypeService = Depends(
         get_system_type_service
     ),
-) -> List[SystemTypeDto]:
-    return system_type_service.get_all()
+) -> Page[SystemTypeDto]:
+    return system_type_service.get_paginated(limit=query.limit, offset=query.offset)
 
 
 @router.get("/{id}", summary="Get system type by id", responses={**api_version_header_responses([200, 404, 422])})

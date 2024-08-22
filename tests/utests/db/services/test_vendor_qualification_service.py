@@ -22,7 +22,7 @@ from app.schemas.vendor_qualifications.schema import QualifiedVendorDTO
 
 class TestVendorQualityService:
 
-    def test_get_all_should_return_all_vendor_qualifications(
+    def test_get_paginated_should_return_paginated_vendor_qualifications(
         self,
         vendor_qualification_service: VendorQualificationService,
         application_repository: ApplicationRepository,
@@ -81,6 +81,8 @@ class TestVendorQualityService:
                 protocol_name=mock_protocol.name,
             )
         ]
-        actual_qualified_vendor = vendor_qualification_service.get_all()
 
-        assert expected_qualified_vendor == actual_qualified_vendor
+        page = vendor_qualification_service.get_paginated(limit=10, offset=0)
+        actual = page.items
+
+        assert actual == expected_qualified_vendor

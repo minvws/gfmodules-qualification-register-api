@@ -1,7 +1,10 @@
-from typing import List
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
 from uuid import UUID
+
+from gfmodules_python_shared.schema.pagination.page_schema import Page
+from gfmodules_python_shared.schema.pagination.pagination_query_params_schema import PaginationQueryParams
 
 from app.container import get_role_service
 from app.db.services.role_service import RoleService
@@ -12,12 +15,13 @@ router = APIRouter(prefix="/roles", tags=["roles"])
 
 
 @router.get("", summary="Get all roles", responses={**api_version_header_responses([200])})
-def get_all(
+def get_paginated(
+    query: Annotated[PaginationQueryParams, Depends()],
     role_service: RoleService = Depends(
         get_role_service
     ),
-) -> List[RoleDto]:
-    return role_service.get_all()
+) -> Page[RoleDto]:
+    return role_service.get_paginated(limit=query.limit, offset=query.offset)
 
 
 @router.get("/{id}", summary="Get role by id", responses={**api_version_header_responses([200, 404, 422])})

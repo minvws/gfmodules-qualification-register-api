@@ -17,7 +17,7 @@ class TestRoleService:
 
         assert actual == expected_dto
 
-    def test_get_all(self, role_service, role_repository):
+    def test_get_paginated(self, role_service, role_repository):
         uuid_ = uuid4()
         role = Role(id=uuid_, name="aRole")
 
@@ -25,6 +25,7 @@ class TestRoleService:
 
         expected = [RoleDto(id=uuid_, name="aRole", description=None)]
 
-        actual = role_service.get_all()
+        page = role_service.get_paginated(limit=10, offset=0)
+        actual = page.items
 
         assert actual == expected

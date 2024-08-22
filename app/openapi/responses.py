@@ -24,3 +24,74 @@ def api_version_header_responses(response_codes: list[int]) -> dict[int | str, d
 
     return responses
 
+
+def api_validation_error_response() -> dict[int | str, dict[str, Any]]:
+    return {
+        422: {
+            "description": "Validation error",
+            "headers": {
+                **api_version_header()
+            },
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                }
+            }
+        }
+    }
+
+
+def api_not_found_response() -> dict[int | str, dict[str, Any]]:
+    return {
+        404: {
+            "description": "Not found error",
+            "headers": {
+                **api_version_header()
+            },
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "detail": {
+                                "type": "string"
+                            }
+                        },
+                        "required": ["detail"]
+                    },
+                    "example": {
+                        "detail": "Not found"
+                    }
+                }
+            }
+        }
+    }
+
+
+def api_conflict_response() -> dict[int | str, dict[str, Any]]:
+    return {
+        409: {
+            "description": "Conflict error",
+            "headers": {
+                **api_version_header()
+            },
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "detail": {
+                                "type": "string"
+                            }
+                        },
+                        "required": ["detail"]
+                    },
+                    "example": {
+                        "detail": "Conflict"
+                    }
+                }
+            }
+        }
+    }

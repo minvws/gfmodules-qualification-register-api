@@ -1,4 +1,4 @@
-from app.schemas.default import BaseModelConfig
+from gfmodules_python_shared.schema.base_model_schema import BaseModelConfig
 from uuid import UUID
 from datetime import date
 

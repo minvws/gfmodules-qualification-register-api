@@ -1,7 +1,8 @@
 from typing import List
 from uuid import UUID
 
-from app.schemas.default import BaseModelConfig
+from gfmodules_python_shared.schema.base_model_schema import BaseModelConfig
+
 from app.schemas.enums.protocol_types import ProtocolTypes
 
 

@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from app.schemas.default import BaseModelConfig
+from gfmodules_python_shared.schema.base_model_schema import BaseModelConfig
 
 
 class ApplicationSummaryDto(BaseModelConfig):

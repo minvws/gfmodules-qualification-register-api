@@ -2,7 +2,8 @@ from datetime import datetime
 from typing import List
 from uuid import UUID
 
-from app.schemas.default import BaseModelConfig
+from gfmodules_python_shared.schema.base_model_schema import BaseModelConfig
+
 from app.schemas.roles.schema import RoleDto
 from app.schemas.system_type.schema import SystemTypeDto
 from app.schemas.vendor.schema import VendorSummaryDto

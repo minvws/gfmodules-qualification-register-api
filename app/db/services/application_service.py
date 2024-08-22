@@ -1,5 +1,4 @@
-from typing import List
-
+from gfmodules_python_shared.schema.pagination.page_schema import Page
 from gfmodules_python_shared.session.session_manager import (
     session_manager,
     get_repository,
@@ -28,7 +27,14 @@ class ApplicationService:
         return map_application_entity_to_dto(entity=entity)
 
     @session_manager
-    def get_all(
-        self, application_repository: ApplicationRepository = get_repository()
-    ) -> List[ApplicationWithVendorDto]:
-        return map_application_entities_to_dtos(entities=application_repository.get_many())
+    def get_paginated(
+        self,
+        limit: int,
+        offset: int,
+        application_repository: ApplicationRepository = get_repository()
+    ) -> Page[ApplicationWithVendorDto]:
+        applications = application_repository.get_many(limit=limit, offset=offset)
+        dto = map_application_entities_to_dtos(entities=applications)
+        total = application_repository.count()
+
+        return Page(items=dto, limit=limit, offset=offset, total=total)

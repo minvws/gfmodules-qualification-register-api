@@ -1,8 +1,9 @@
 from typing import Sequence
 from uuid import UUID
 
+from gfmodules_python_shared.schema.base_model_schema import BaseModelConfig
+
 from app.schemas.application_summary.schema import ApplicationSummaryDto
-from app.schemas.default import BaseModelConfig
 
 
 class VendorDto(BaseModelConfig):

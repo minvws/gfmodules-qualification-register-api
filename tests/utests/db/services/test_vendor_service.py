@@ -22,7 +22,7 @@ class TestVendorService:
 
         assert actual == expected
 
-    def test_get_all(self, vendor_repository, vendor_service):
+    def test_get_paginated(self, vendor_repository, vendor_service):
         uuid_a = uuid4()
         uuid_b = uuid4()
 
@@ -38,7 +38,8 @@ class TestVendorService:
         vendor_repository.create(vendor_a)
         vendor_repository.create(vendor_b)
 
-        actual = vendor_service.get_all()
+        page = vendor_service.get_paginated(limit=10, offset=0)
+        actual = page.items
 
         assert actual == expected
 
@@ -87,6 +88,7 @@ class TestVendorService:
         vendor_repository.create(vendors_a)
         vendor_repository.create(vendor_b)
 
-        actual = vendor_service.get_all()
+        page = vendor_service.get_paginated(limit=10, offset=0)
+        actual = page.items
 
         assert actual == expected
