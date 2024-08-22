@@ -4,11 +4,6 @@ from gfmodules_python_shared.session.session_manager import (
     session_manager,
 )
 
-from gfmodules_python_shared.session.session_manager import (
-    get_repository,
-    session_manager,
-)
-
 from app.db.repository.healthcare_provider_qualification_repository import (
     HealthcareProviderQualificationRepository,
 )
