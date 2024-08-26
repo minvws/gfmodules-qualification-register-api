@@ -19,9 +19,29 @@ host = 0.0.0.0
 port = 8507
 # Live reload for uvicorn server
 reload = True
-
 # SSL configuration
 use_ssl = False
 ssl_base_dir = secrets/ssl
 ssl_cert_file = server.cert
 ssl_key_file = server.key
+
+[telemetry]
+# Telemetry is enabled or not
+enabled = True
+# Endpoint to GRPC server for telemetry
+endpoint = http://tracing:4317
+# Service name to use
+service_name = Qualification Register
+# Tracer name to use
+tracer_name = zmodules.service.qualification_register
+
+[stats]
+# Statsd is enabled or not
+enabled = True
+# Host for statsd server
+host = 127.0.0.1
+# Port for statsd server
+port = 8125
+# Module name for statsd
+module_name = qualification-register
+

@@ -6,12 +6,12 @@ echo "📖 This script will help you running the qualification-register-api for 
 echo "with default values so you can run it directly."
 
 if [ ! -f ~/.auth.toml ] ; then
-  echo "⚠️  Poetry needs a auth.toml file to install private dependencies inside a docker container."
-  echo "Please create the auth.toml file in the home directory with the following content:"
+  echo "⚠️  Poetry needs a .auth.toml file to install private dependencies inside a docker container."
+  echo "Please create the .auth.toml file in the home directory with the following content:"
   echo ""
   echo "[http-basic.git-minvws-gfmodules-python-shared]"
-  echo "username = github-username"
-  echo "password = github-personal-access-token"
+  echo "username = \"github-username\""
+  echo "password = \"github-personal-access-token\""
   echo ""
   exit;
 fi
