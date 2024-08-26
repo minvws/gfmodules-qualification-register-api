@@ -2,7 +2,8 @@ import logging
 
 from typing import Any
 
-from app.stats import StatsdMiddleware, setup_stats
+from app.middleware.stats import StatsdMiddleware
+from app.stats import setup_stats
 from app.telemetry import setup_telemetry
 from fastapi import FastAPI
 import uvicorn
