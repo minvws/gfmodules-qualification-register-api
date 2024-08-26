@@ -17,27 +17,10 @@ from app.openapi.responses import api_version_header_responses
 from app.schemas.healthcare_provider_qualification.schema import (
     QualifiedHealthcareProviderDTO,
 )
-from app.schemas.qualification.schema import QualificationDto
 from app.schemas.vendor_qualifications.schema import QualifiedVendorDTO
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/qualifications", tags=["qualifications"])
-
-
-@router.get(
-    "",
-    summary="Get all qualifications based on the supplied query params",
-    responses={**api_version_header_responses([200])},
-)
-def get_paginated(
-    query: Annotated[PaginationQueryParams, Depends()],
-    healthcare_provider_service: HealthcareProviderService = Depends(
-        get_healthcare_provider_service
-    ),
-) -> Page[QualificationDto]:
-    return healthcare_provider_service.get_paginated(
-        limit=query.limit, offset=query.offset
-    )
 
 
 @router.get(
