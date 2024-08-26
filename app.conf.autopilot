@@ -11,8 +11,19 @@ redoc_url = /redocs
 host = 0.0.0.0
 port = 8507
 reload = True
-
 use_ssl = False
 ssl_base_dir = secrets/ssl
 ssl_cert_file = server.cert
 ssl_key_file = server.key
+
+[telemetry]
+enabled = True
+endpoint = http://tracing:4317
+service_name = Qualification Register
+tracer_name = zmodules.service.qualification_register
+
+[stats]
+enabled = True
+host = graphite
+port = 8125
+module_name = qualification-register

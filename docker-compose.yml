@@ -16,6 +16,7 @@ services:
             - 8507:8507
         networks:
             - gfmodules-qualification
+            - zmodules
 
 secrets:
   auth_toml:
@@ -25,3 +26,6 @@ networks:
   gfmodules-qualification:
     driver: bridge
     name: gfmodules-qualification
+  zmodules:
+    driver: bridge
+    name: zmodules

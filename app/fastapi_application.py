@@ -2,6 +2,9 @@ import logging
 
 from typing import Any
 
+from app.middleware.stats import StatsdMiddleware
+from app.stats import setup_stats
+from app.telemetry import setup_telemetry
 from fastapi import FastAPI
 import uvicorn
 
@@ -103,6 +106,15 @@ def create_fastapi_app() -> FastAPI:
         ],
     )
     fastapi_mount_api(root_fastapi=fastapi, mount_path="/v1", api=fastapi_v1)
+
+    if get_config().stats.enabled:
+        setup_stats()
+        fastapi.add_middleware(StatsdMiddleware, module_name=get_config().stats.module_name)
+        fastapi_v1.add_middleware(StatsdMiddleware, module_name=get_config().stats.module_name)
+
+    if get_config().telemetry.enabled:
+        setup_telemetry(fastapi)
+
 
     return fastapi
 
