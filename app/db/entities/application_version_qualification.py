@@ -12,8 +12,7 @@ from app.db.entities import protocol_version
 class ApplicationVersionQualification(Base):
     """
     Association object between ApplicationVersion and ProtocolVersion.
-    This object determines the qualification of an application version against a
-    defined protocol version.
+    This object determines the qualification of an application version against a defined protocol version.
     """
 
     __tablename__ = "protocol_application_qualifications"

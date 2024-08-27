@@ -4,10 +4,7 @@ from gfmodules_python_shared.session.session_manager import (
     get_repository,
 )
 
-from app.db.repository.application_version_qualification_repository import (
-    ApplicationVersionQualificationRepository,
-)
-from app.schemas.vendor_qualifications.mapper import flatten_vendor_qualifications
+from app.db.repository.vendor_repository import VendorRepository
 from app.schemas.vendor_qualifications.schema import QualifiedVendorDTO
 
 
@@ -18,10 +15,15 @@ class VendorQualificationService:
         self,
         limit: int,
         offset: int,
-        repository: ApplicationVersionQualificationRepository = get_repository()
+        repository: VendorRepository = get_repository(),
     ) -> Page[QualifiedVendorDTO]:
-        qualified_vendors = repository.get_many(limit=limit, offset=offset)
-        dto = flatten_vendor_qualifications(qualified_vendors)
-        total = repository.count()
+        db_rows = repository.get_qualified_vendors(limit=limit, offset=offset)
+        dto = [QualifiedVendorDTO(**row._mapping) for row in db_rows]
+        count = repository.total_qualified_vendors()
 
-        return Page(items=dto, limit=limit, offset=offset, total=total)
+        return Page(
+            items=dto,
+            limit=limit,
+            offset=offset,
+            total=count,
+        )

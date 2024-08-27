@@ -46,15 +46,23 @@ class TestVendorQualityService:
 
         expected_qualified_vendor = [
             QualifiedVendorDTO(
+                qualification_id=mock_application_qualification.id,
+                application_version_id=mock_application_version.id,
+                application_id=mock_application.id,
                 vendor_id=mock_vendor.id,
-                vendor_name=mock_vendor.trade_name,
-                application_name=mock_application.name,
-                version=mock_application_version.version,
+                protocol_id=mock_protocol.id,
+                system_type_id=mock_system_type.id,
+                role_id=mock_role.id,
+                application_version=mock_application_version.version,
+                application=mock_application.name,
+                protocol=mock_protocol.name,
+                protocol_version=mock_protocol_version.version,
                 system_type=mock_system_type.name,
                 role=mock_role.name,
+                kvk_number=mock_vendor.kvk_number,
+                trade_name=mock_vendor.trade_name,
+                statutory_name=mock_vendor.statutory_name,
                 qualification_date=mock_application_qualification.qualification_date,
-                protocol_version=mock_protocol.name,
-                protocol_name=mock_protocol.name,
             )
         ]
 
