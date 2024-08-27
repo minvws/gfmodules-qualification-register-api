@@ -156,8 +156,8 @@ jobs:
           with:
             python_version: "3.11"
 
-        - name: Copy example configuration
-          run: cp app.conf.autopilot app.conf
+        - name: Copy CI configuration
+          run: cp app.conf.ci app.conf
 
         - name: Run the application silently
           run: poetry run python -m app.main &
