@@ -83,6 +83,6 @@ class VendorRepository(RepositoryBase[Vendor]):
         )
         result = self.session.session.execute(stmt).scalar()
         if result is None:
-            raise ValueError("No qualified vendor found")
+            return 0
 
         return result
