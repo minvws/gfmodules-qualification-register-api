@@ -4,11 +4,7 @@ from gfmodules_python_shared.repository.repository_base import RepositoryBase
 from gfmodules_python_shared.session.db_session import DbSession
 from sqlalchemy import func, Result, select, Select
 
-from app.db.entities.application_version import ApplicationVersion
 from app.db.entities.healthcare_provider import HealthcareProvider
-from app.db.entities.healthcare_provider_application_version import (
-    HealthcareProviderApplicationVersion,
-)
 from app.db.entities.healthcare_provider_qualification import (
     HealthcareProviderQualification,
 )
@@ -28,8 +24,6 @@ class HealthcareProviderRepository(RepositoryBase[HealthcareProvider]):
             stmt.outerjoin(HealthcareProviderQualification.healthcare_provider)
             .outerjoin(HealthcareProviderQualification.protocol_version)
             .outerjoin(ProtocolVersion.protocol)
-            .outerjoin(HealthcareProviderApplicationVersion.application_version)
-            .outerjoin(ApplicationVersion.application)
         )
 
     def get_qualified_providers(

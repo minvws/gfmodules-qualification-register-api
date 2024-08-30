@@ -197,9 +197,7 @@ def mock_protocol(mock_protocol_version: ProtocolVersion) -> Protocol:
 
 
 @pytest.fixture
-def mock_healthcare_provider(
-    mock_application_version: ApplicationVersion,
-) -> HealthcareProvider:
+def mock_healthcare_provider() -> HealthcareProvider:
     return HealthcareProvider(
         ura_code="example",
         agb_code="example",
