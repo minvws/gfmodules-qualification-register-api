@@ -18,9 +18,7 @@ from app.db.entities.healthcare_provider_qualification import (
 from app.db.entities.protocol import Protocol
 from app.db.entities.protocol_version import ProtocolVersion
 from app.db.repository.application_repository import ApplicationRepository
-from app.db.repository.healthcare_provider_qualification_repository import (
-    HealthcareProviderQualificationRepository,
-)
+
 from app.db.repository.healthcare_provider_repository import (
     HealthcareProviderRepository,
 )
@@ -44,7 +42,6 @@ class TestHealthcareProvidersService:
         mock_application_version: ApplicationVersion,
         healthcare_provider_service: HealthcareProviderService,
         healthcare_provider_repository: HealthcareProviderRepository,
-        healthcare_provider_qualification_repository: HealthcareProviderQualificationRepository,
         protocol_repository: ProtocolRepository,
         application_repository: ApplicationRepository,
     ):
@@ -72,9 +69,7 @@ class TestHealthcareProvidersService:
         application_repository.create(mock_application)
         protocol_repository.create(mock_protocol)
         healthcare_provider_repository.create(mock_healthcare_provider)
-        healthcare_provider_qualification_repository.create(
-            mock_healthcare_provider_qualification
-        )
+
         data = [
             QualifiedHealthcareProviderDTO(
                 qualification_id=mock_healthcare_provider_qualification.id,
