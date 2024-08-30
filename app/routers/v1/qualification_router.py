@@ -27,6 +27,7 @@ router = APIRouter(prefix="/qualifications", tags=["qualifications"])
     "/vendors",
     summary="Get all qualifications for software vendors",
     responses={**api_version_header_responses([200])},
+    response_model=Page[QualifiedVendorDTO],
 )
 def get_vendor_qualifications(
     query: Annotated[PaginationQueryParams, Depends()],
@@ -38,6 +39,7 @@ def get_vendor_qualifications(
 @router.get(
     "/healthcare-providers",
     summary="Get paginated qualifications for healthcare providers",
+    response_model=Page[QualifiedHealthcareProviderDTO],
     responses={**api_version_header_responses([200])},
 )
 def get_healthcare_provider_qualifications(

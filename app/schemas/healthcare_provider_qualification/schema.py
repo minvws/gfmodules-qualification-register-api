@@ -5,10 +5,12 @@ from gfmodules_python_shared.schema.base_model_schema import BaseModelConfig
 
 
 class QualifiedHealthcareProviderDTO(BaseModelConfig):
-    provider_id: UUID
-    provider_name: str
+    qualification_id: UUID
+    healthcare_provider_id: UUID
+    protocol_id: UUID
+    protocol_version_id: UUID
+    healthcare_provider: str
     protocol: str
+    protocol_type: str
     protocol_version: str
-    application_name: str
-    application_version: str
     qualification_date: date

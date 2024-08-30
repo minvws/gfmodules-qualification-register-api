@@ -77,12 +77,14 @@ class TestHealthcareProvidersService:
         )
         data = [
             QualifiedHealthcareProviderDTO(
-                provider_id=mock_healthcare_provider.id,
-                provider_name=mock_protocol.name,
+                qualification_id=mock_healthcare_provider_qualification.id,
+                healthcare_provider_id=mock_healthcare_provider.id,
+                protocol_id=mock_protocol.id,
+                protocol_version_id=mock_protocol_version.id,
+                healthcare_provider=mock_healthcare_provider.trade_name,
                 protocol=mock_protocol.name,
+                protocol_type=mock_protocol.protocol_type,
                 protocol_version=mock_protocol_version.version,
-                application_name=mock_application.name,
-                application_version=mock_application_version.version,
                 qualification_date=mock_healthcare_provider_qualification.qualification_date,
             )
         ]

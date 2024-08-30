@@ -5,18 +5,12 @@ from gfmodules_python_shared.session.session_manager import (
 )
 from uuid import UUID
 
-from app.db.repository.healthcare_provider_qualification_repository import (
-    HealthcareProviderQualificationRepository,
-)
 from app.db.repository.healthcare_provider_repository import (
     HealthcareProviderRepository,
 )
 from app.exceptions.http_base_exceptions import NotFoundException
 from app.schemas.healthcare_provider.mapper import map_healthcare_provider_entity_to_dto
 from app.schemas.healthcare_provider.schema import HealthcareProviderDto
-from app.schemas.healthcare_provider_qualification.mapper import (
-    flatten_healthcare_provider_qualification,
-)
 from app.schemas.healthcare_provider_qualification.schema import (
     QualifiedHealthcareProviderDTO,
 )
@@ -46,21 +40,6 @@ class HealthcareProviderService:
         return Page(items=dto, limit=limit, offset=offset, total=total)
 
     @session_manager
-    def get_qualified_healthcare_providers(
-        self,
-        limit: int,
-        offset: int,
-        healthcare_providers_qualification_repository: HealthcareProviderQualificationRepository = get_repository(),
-    ) -> Page[QualifiedHealthcareProviderDTO]:
-        qualified_providers = (
-            healthcare_providers_qualification_repository.get_qualified_healthcare_providers()
-        )
-        dto = flatten_healthcare_provider_qualification(qualified_providers)
-        total = healthcare_providers_qualification_repository.count()
-
-        return Page(items=dto, total=total, limit=limit, offset=offset)
-
-    @session_manager
     def get(
         self,
         provider_id: UUID,
@@ -71,3 +50,17 @@ class HealthcareProviderService:
             raise NotFoundException()
 
         return map_healthcare_provider_entity_to_dto(entity=db_provider)
+
+    @session_manager
+    def get_qualified_healthcare_providers(
+        self,
+        limit: int,
+        offset: int,
+        healthcare_providers_repository: HealthcareProviderRepository = get_repository(),
+    ) -> Page[QualifiedHealthcareProviderDTO]:
+        db_rows = healthcare_providers_repository.get_qualified_providers(
+            limit=limit, offset=offset
+        )
+        dto = [QualifiedHealthcareProviderDTO(**row._mapping) for row in db_rows]
+        total = healthcare_providers_repository.get_total_qualified_providers()
+        return Page(items=dto, limit=limit, offset=offset, total=total)
