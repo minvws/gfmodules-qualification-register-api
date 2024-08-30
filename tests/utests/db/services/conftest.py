@@ -21,9 +21,7 @@ from app.db.repository.application_repository import ApplicationRepository
 from app.db.repository.application_version_qualification_repository import (
     ApplicationVersionQualificationRepository,
 )
-from app.db.repository.healthcare_provider_qualification_repository import (
-    HealthcareProviderQualificationRepository,
-)
+
 from app.db.repository.healthcare_provider_repository import (
     HealthcareProviderRepository,
 )
@@ -76,13 +74,6 @@ def healthcare_provider_repository(session: DbSession) -> HealthcareProviderRepo
 @pytest.fixture
 def healthcare_provider_service(session: DbSession) -> HealthcareProviderService:
     return HealthcareProviderService()
-
-
-@pytest.fixture
-def healthcare_provider_qualification_repository(
-    session: DbSession,
-) -> HealthcareProviderQualificationRepository:
-    return HealthcareProviderQualificationRepository(db_session=session)
 
 
 @pytest.fixture
