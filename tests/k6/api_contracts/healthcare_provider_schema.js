@@ -1,9 +1,13 @@
-import { application } from "./application.js";
-
-export const vendor = {
+export const healthcareProviderSchema = {
     type: "object",
     properties: {
         id: {
+            type: "string",
+        },
+        uraCode: {
+            type: "string",
+        },
+        agbCode: {
             type: "string",
         },
         tradeName: {
@@ -12,19 +16,16 @@ export const vendor = {
         statutoryName: {
             type: "string",
         },
-        kvkNumber: {
-            type: "string",
-        },
-        applications: {
+        applicationVersions: {
             type: "array",
-            items: application,
-        }
+        },
     },
     required: [
         "id",
+        "uraCode",
+        "agbCode",
         "tradeName",
         "statutoryName",
-        "kvkNumber",
-        "applications",
+        "applicationVersions",
     ]
 }

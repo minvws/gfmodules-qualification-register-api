@@ -1,4 +1,4 @@
-export const healthResponse = {
+export const healthResponseSchema = {
     type: "object",
     properties: {
         status: {

@@ -1,4 +1,4 @@
-export const application     = {
+export const roleSchema = {
     type: "object",
     properties: {
         id: {
@@ -7,17 +7,12 @@ export const application     = {
         name: {
             type: "string",
         },
-        createdAt: {
-            type: "string",
-        },
-        modifiedAt: {
-            type: "string",
+        description: {
+            type: ["string", "null"]
         },
     },
     required: [
         "id",
         "name",
-        "createdAt",
-        "modifiedAt",
     ]
 }

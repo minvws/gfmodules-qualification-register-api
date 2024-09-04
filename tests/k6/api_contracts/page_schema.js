@@ -1,4 +1,4 @@
-export const pageResponse = function(item) {
+export const pageResponseSchema = function(item) {
     const itemSchema = item ?? { type: "object" }
 
     return {

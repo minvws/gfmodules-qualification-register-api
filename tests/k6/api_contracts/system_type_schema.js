@@ -1,4 +1,4 @@
-export const systemType = {
+export const systemTypeSchema = {
     type: "object",
     properties: {
         id: {

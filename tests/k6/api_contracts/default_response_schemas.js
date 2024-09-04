@@ -18,7 +18,7 @@ export const validationItemSchema = {
     ]
 }
 
-export const validationErrorResponse = {
+export const validationErrorResponseSchema = {
     type: "object",
     properties: {
         detail: {
@@ -31,7 +31,7 @@ export const validationErrorResponse = {
     ]
 }
 
-export const notFoundResponse = {
+export const notFoundResponseSchema = {
     type: "object",
     properties: {
         detail: {

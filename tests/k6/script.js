@@ -4,6 +4,9 @@ import { healthTests } from "./tests/health.js";
 import { systemTypesTests } from "./tests/system_types.js";
 import { vendorsTests } from "./tests/vendors.js";
 import { rolesTests } from "./tests/roles.js";
+import { applicationsTests } from "./tests/applications.js";
+import { qualificationsTests } from "./tests/qualifications.js";
+import { healthcareProvidersTests } from "./tests/healthcare-providers.js";
 
 const baseUrl = __ENV.ENDPOINT_URL ?? "http://localhost:8507";
 // Sleep duration between successive requests.
@@ -24,7 +27,10 @@ initContractPlugin(chai)
 
 export default function testSuite() {
     healthTests(baseUrl);
+    applicationsTests(baseUrl);
+    qualificationsTests(baseUrl);
     systemTypesTests(baseUrl);
     vendorsTests(baseUrl);
     rolesTests(baseUrl);
+    healthcareProvidersTests(baseUrl);
 }
