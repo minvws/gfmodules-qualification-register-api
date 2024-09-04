@@ -8,13 +8,12 @@ from gfmodules_python_shared.schema.pagination.pagination_query_params_schema im
 
 from app.container import get_system_type_service
 from app.db.services.system_type_service import SystemTypeService
-from app.openapi.responses import api_version_header_responses
 from app.schemas.system_type.schema import SystemTypeDto
 
 router = APIRouter(prefix="/system-types", tags=["system types"])
 
 
-@router.get("", summary="Get all system types", responses={**api_version_header_responses([200])})
+@router.get("", summary="Get all system types")
 def get_paginated(
     query: Annotated[PaginationQueryParams, Depends()],
     system_type_service: SystemTypeService = Depends(
@@ -24,7 +23,7 @@ def get_paginated(
     return system_type_service.get_paginated(limit=query.limit, offset=query.offset)
 
 
-@router.get("/{id}", summary="Get system type by id", responses={**api_version_header_responses([200, 404, 422])})
+@router.get("/{id}", summary="Get system type by id")
 def get(
     id_: UUID = Path(alias="id"),
     system_type_service: SystemTypeService = Depends(

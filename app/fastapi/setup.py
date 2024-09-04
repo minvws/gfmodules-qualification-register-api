@@ -6,6 +6,7 @@ from starlette.responses import RedirectResponse
 
 from app.config import Config
 from app.middleware.api_version import ApiVersionHeaderMiddleware
+from app.openapi.responses import api_version_header
 
 
 def setup_fastapi(
@@ -50,6 +51,7 @@ def setup_fastapi_for_api(
         openapi_tags
     )
 
+    setup_openapi(fastapi)
     fastapi.add_middleware(ApiVersionHeaderMiddleware, api_version=api_version)
 
     return fastapi
@@ -61,3 +63,22 @@ def fastapi_mount_api(root_fastapi: FastAPI, mount_path: str, api: FastAPI) -> N
     @root_fastapi.get(mount_path, include_in_schema=False)
     async def docs_redirect() -> RedirectResponse:
         return RedirectResponse(url=mount_path + '/docs')
+
+
+def setup_openapi(app: FastAPI) -> None:
+    FastAPI.openapi(app)
+
+    if not app.openapi_schema:
+        return
+
+    paths = app.openapi_schema.get('paths')
+    if not isinstance(paths, dict):
+        return
+
+    for _, method_item in paths.items():
+        for _, param in method_item.items():
+            responses = param.get('responses')
+            for key in responses.keys():
+                if int(key) < 500:
+                    headers = responses[key].get('headers', {})
+                    responses[key]['headers'] = {**headers, **api_version_header()}

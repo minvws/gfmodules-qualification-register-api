@@ -8,13 +8,12 @@ from gfmodules_python_shared.schema.pagination.pagination_query_params_schema im
 
 from app.container import get_role_service
 from app.db.services.role_service import RoleService
-from app.openapi.responses import api_version_header_responses
 from app.schemas.roles.schema import RoleDto
 
 router = APIRouter(prefix="/roles", tags=["roles"])
 
 
-@router.get("", summary="Get all roles", responses={**api_version_header_responses([200])})
+@router.get("", summary="Get all roles")
 def get_paginated(
     query: Annotated[PaginationQueryParams, Depends()],
     role_service: RoleService = Depends(
@@ -24,7 +23,7 @@ def get_paginated(
     return role_service.get_paginated(limit=query.limit, offset=query.offset)
 
 
-@router.get("/{id}", summary="Get role by id", responses={**api_version_header_responses([200, 404, 422])})
+@router.get("/{id}", summary="Get role by id")
 def get(
     id_: UUID = Path(alias="id"),
     role_service: RoleService = Depends(

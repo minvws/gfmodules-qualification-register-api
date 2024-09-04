@@ -13,7 +13,6 @@ from app.container import (
 )
 from app.db.services.healthcare_provider_service import HealthcareProviderService
 from app.db.services.vendor_qualification_service import VendorQualificationService
-from app.openapi.responses import api_version_header_responses
 from app.schemas.healthcare_provider_qualification.schema import (
     QualifiedHealthcareProviderDTO,
 )
@@ -26,7 +25,6 @@ router = APIRouter(prefix="/qualifications", tags=["qualifications"])
 @router.get(
     "/vendors",
     summary="Get all qualifications for software vendors",
-    responses={**api_version_header_responses([200])},
     response_model=Page[QualifiedVendorDTO],
 )
 def get_vendor_qualifications(
@@ -40,7 +38,6 @@ def get_vendor_qualifications(
     "/healthcare-providers",
     summary="Get paginated qualifications for healthcare providers",
     response_model=Page[QualifiedHealthcareProviderDTO],
-    responses={**api_version_header_responses([200])},
 )
 def get_healthcare_provider_qualifications(
     query: Annotated[PaginationQueryParams, Depends()],
