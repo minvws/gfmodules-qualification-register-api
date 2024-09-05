@@ -2,13 +2,14 @@ import logging
 
 from typing import Any
 
+from app.fastapi.custom_fastapi import CustomFastAPI
 from app.middleware.stats import StatsdMiddleware
 from app.stats import setup_stats
 from app.telemetry import setup_telemetry
 from fastapi import FastAPI
 import uvicorn
 
-from app.fastapi.setup import setup_fastapi, setup_fastapi_for_api, fastapi_mount_api
+from app.fastapi.setup import setup_default_middleware_and_routers, fastapi_mount_api
 from app.routers.default_router import router as default_router
 from app.routers.health_router import router as health_router
 from app.routers.v1.qualification_router import router as qualification_router
@@ -31,18 +32,18 @@ def get_uvicorn_params() -> dict[str, Any]:
         "port": config.uvicorn.port,
         "reload": config.uvicorn.reload,
     }
-    if config.uvicorn.use_ssl:
-        if (
-            config.uvicorn.ssl_base_dir
-            and config.uvicorn.ssl_cert_file
-            and config.uvicorn.ssl_key_file
-        ):
-            kwargs["ssl_keyfile"] = (
+    if (
+        config.uvicorn.use_ssl
+        and config.uvicorn.ssl_base_dir
+        and config.uvicorn.ssl_cert_file
+        and config.uvicorn.ssl_key_file
+    ):
+        kwargs["ssl_keyfile"] = (
                 config.uvicorn.ssl_base_dir + "/" + config.uvicorn.ssl_key_file
-            )
-            kwargs["ssl_certfile"] = (
+        )
+        kwargs["ssl_certfile"] = (
                 config.uvicorn.ssl_base_dir + "/" + config.uvicorn.ssl_cert_file
-            )
+        )
 
     return kwargs
 
@@ -61,32 +62,39 @@ def create_fastapi_app() -> FastAPI:
 
     config = get_config()
 
-    fastapi = setup_fastapi(
-        config,
+    app_title = "Qualification Register API"
+    docs_url = None
+    redoc_url = None
+
+    if config.uvicorn.swagger_enabled:
+        docs_url = config.uvicorn.docs_url
+        redoc_url = config.uvicorn.redoc_url
+
+    fastapi = FastAPI(
+        title=app_title,
+        docs_url=docs_url,
+        redoc_url=redoc_url,
+        redirect_slashes=False,
+        description="This is the documentation for the root endpoints. "
+                    "For the rest of the API documentation see the [/v1/docs](/v1/docs).",
+        openapi_tags=[
+            {"name": "health", "description": "Health check endpoints"},
+        ])
+    setup_default_middleware_and_routers(
+        fastapi,
         routers=[
             default_router,
             health_router,
         ],
-        description="This is the documentation for the root endpoints. "
-        "For the rest of the API documentation see the [/v1/docs](/v1/docs).",
-        openapi_tags=[
-            {"name": "health", "description": "Health check endpoints"},
-        ],
     )
 
     # v1 api
-    fastapi_v1 = setup_fastapi_for_api(
-        config,
-        routers=[
-            application_router,
-            qualification_router,
-            role_router,
-            system_type_router,
-            vendor_router,
-            healthcare_provider_router,
-        ],
-        api_version="1.0.0",
-        description="This is the documentation for the /v1 endpoints.",
+    fastapi_v1 = CustomFastAPI(
+        title=app_title,
+        docs_url=docs_url,
+        redoc_url=redoc_url,
+        redirect_slashes=False,
+        description="This is the documentation for the v1 endpoints.",
         openapi_tags=[
             {
                 "name": "applications",
@@ -105,6 +113,19 @@ def create_fastapi_app() -> FastAPI:
             },
         ],
     )
+    setup_default_middleware_and_routers(
+        fastapi_v1,
+        routers=[
+            application_router,
+            qualification_router,
+            role_router,
+            system_type_router,
+            vendor_router,
+            healthcare_provider_router,
+        ],
+        api_version="1.0.0",
+    )
+
     fastapi_mount_api(root_fastapi=fastapi, mount_path="/v1", api=fastapi_v1)
 
     if get_config().stats.enabled:
@@ -114,7 +135,6 @@ def create_fastapi_app() -> FastAPI:
 
     if get_config().telemetry.enabled:
         setup_telemetry(fastapi)
-
 
     return fastapi
 
