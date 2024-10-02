@@ -2,15 +2,17 @@ from datetime import datetime
 from typing import List
 from uuid import UUID, uuid4
 
-from sqlalchemy import types, String, TIMESTAMP
-from sqlalchemy.orm import mapped_column, Mapped, relationship
+from gfmodules_python_shared.schema.sql_model import SQLModelBase
+from sqlalchemy import TIMESTAMP, String, types
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.db.entities.base import Base
-from app.db.entities import healthcare_provider_application_version
-from app.db.entities import healthcare_provider_qualification
+from app.db.entities import (
+    healthcare_provider_application_version,
+    healthcare_provider_qualification,
+)
 
 
-class HealthcareProvider(Base):
+class HealthcareProvider(SQLModelBase):
     __tablename__ = "healthcare_providers"
 
     id: Mapped[UUID] = mapped_column(
@@ -49,16 +51,3 @@ class HealthcareProvider(Base):
     qualified_protocols: Mapped[
         List["healthcare_provider_qualification.HealthcareProviderQualification"]
     ] = relationship(back_populates="healthcare_provider")
-
-    def __repr__(self) -> str:
-        return self._repr(
-            id=str(self.id),
-            ura_code=self.ura_code,
-            agb_code=self.agb_code,
-            trade_name=self.trade_name,
-            statutory_name=self.statutory_name,
-            created_at=self.created_at,
-            modified_at=self.modified_at,
-            application_versions=self.application_versions,
-            qualified_protocols=self.qualified_protocols,
-        )
