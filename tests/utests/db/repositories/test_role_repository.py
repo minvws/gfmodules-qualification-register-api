@@ -1,25 +1,17 @@
-import pytest
+from uuid import UUID
 
-from app.db.entities.role import Role
-from app.db.repository.role_repository import RoleRepository
+from app.db.entities import Role
+from app.db.repository import RoleRepository
+from tests.utests.db.utils import are_the_same_entity
 
 
-@pytest.fixture()
-def mock_role() -> Role:
-    return Role(
-        name="aRole",
-        description=None
+def test_create_should_succeed_when_given_a_valid_role_object(
+    role_repository: RoleRepository,
+):
+    role = Role(
+        id=UUID("4d5ff2af-1bcb-40d6-a53c-2c9ce4d4e470"), name="aRole", description=None
     )
+    role_repository.create(role)
 
-
-class TestRoleRepository:
-
-    def test_create_should_succeed_when_given_a_valid_role_object(self, role_repository: RoleRepository,
-                                                                  mock_role: Role):
-        expected_role = mock_role
-
-        role_repository.create(mock_role)
-        actual_role = role_repository.get(id=mock_role.id)
-
-        assert actual_role == expected_role
-        assert role_repository.count() == 1
+    assert are_the_same_entity(role_repository.get_or_fail(id=role.id), role)
+    assert role_repository.count() == 1
