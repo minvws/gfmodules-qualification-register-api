@@ -1,24 +1,14 @@
 import inject
+from sqlalchemy.orm import Session, sessionmaker
 
-from gfmodules_python_shared.session.session_factory import DbSessionFactory
-from gfmodules_python_shared.repository.repository_factory import RepositoryFactory
-
-from app.db.db import Database
 from app.config import get_config
-from app.db.services.application_service import (
+from app.db.db import Database
+from app.db.services import (
     ApplicationService,
-)
-from app.db.services.healthcare_provider_service import (
     HealthcareProviderService,
-)
-from app.db.services.role_service import (
     RoleService,
-)
-from app.db.services.system_type_service import (
     SystemTypeService,
-)
-from app.db.services.vendor_qualification_service import VendorQualificationService
-from app.db.services.vendor_service import (
+    VendorQualificationService,
     VendorService,
 )
 
@@ -29,11 +19,7 @@ def container_config(binder: inject.Binder) -> None:
     db = Database(dsn=config.database.dsn)
     binder.bind(Database, db)
 
-    session_factory = DbSessionFactory(db.engine)
-    binder.bind(DbSessionFactory, session_factory)
-
-    repository_factory = RepositoryFactory()
-    binder.bind(RepositoryFactory, repository_factory)
+    binder.bind(sessionmaker[Session], sessionmaker(db.engine, expire_on_commit=False))
 
     healthcare_provider_service = HealthcareProviderService()
     binder.bind(HealthcareProviderService, healthcare_provider_service)
@@ -58,9 +44,7 @@ def get_database() -> Database:
     return inject.instance(Database)
 
 
-def get_healthcare_provider_service() -> (
-    HealthcareProviderService
-):
+def get_healthcare_provider_service() -> HealthcareProviderService:
     return inject.instance(HealthcareProviderService)
 
 
@@ -78,6 +62,7 @@ def get_vendor_service() -> VendorService:
 
 def get_system_type_service() -> SystemTypeService:
     return inject.instance(SystemTypeService)
+
 
 def get_vendor_qualification_service() -> VendorQualificationService:
     return inject.instance(VendorQualificationService)
