@@ -1,13 +1,14 @@
-from gfmodules_python_shared.repository.repository_base import RepositoryBase
-from gfmodules_python_shared.session.db_session import DbSession
+from typing import Any
 
-from app.db.entities.application_version_qualification import (
-    ApplicationVersionQualification,
-)
+from gfmodules_python_shared.repository.base import RepositoryBase
+from sqlalchemy import ColumnExpressionArgument
+
+from app.db.entities import ApplicationVersionQualification
 
 
 class ApplicationVersionQualificationRepository(
     RepositoryBase[ApplicationVersionQualification]
 ):
-    def __init__(self, db_session: DbSession):
-        super().__init__(session=db_session, cls_model=ApplicationVersionQualification)
+    @property
+    def order_by(self) -> tuple[ColumnExpressionArgument[Any] | str, ...]:
+        return (ApplicationVersionQualification.created_at.desc(),)

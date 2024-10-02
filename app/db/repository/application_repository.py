@@ -1,9 +1,12 @@
-from gfmodules_python_shared.repository.repository_base import RepositoryBase
-from gfmodules_python_shared.session.db_session import DbSession
+from typing import Any
 
-from app.db.entities.application import Application
+from gfmodules_python_shared.repository.base import RepositoryBase
+from sqlalchemy import ColumnExpressionArgument
+
+from app.db.entities import Application
 
 
 class ApplicationRepository(RepositoryBase[Application]):
-    def __init__(self, db_session: DbSession):
-        super().__init__(session=db_session, cls_model=Application)
+    @property
+    def order_by(self) -> tuple[ColumnExpressionArgument[Any] | str, ...]:
+        return (Application.created_at.desc(),)

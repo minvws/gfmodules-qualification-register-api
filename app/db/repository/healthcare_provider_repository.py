@@ -1,23 +1,22 @@
-from typing import TypeVar, Any
+from typing import Any, TypeVar
 
-from gfmodules_python_shared.repository.repository_base import RepositoryBase
-from gfmodules_python_shared.session.db_session import DbSession
-from sqlalchemy import func, Result, select, Select
+from gfmodules_python_shared.repository.base import RepositoryBase
+from sqlalchemy import ColumnExpressionArgument, Result, Select, func, select
 
-from app.db.entities.healthcare_provider import HealthcareProvider
-from app.db.entities.healthcare_provider_qualification import (
+from app.db.entities import (
+    HealthcareProvider,
     HealthcareProviderQualification,
+    Protocol,
+    ProtocolVersion,
 )
-from app.db.entities.protocol import Protocol
-from app.db.entities.protocol_version import ProtocolVersion
 
 _T = TypeVar("_T", bound=tuple[Any, ...])
 
 
 class HealthcareProviderRepository(RepositoryBase[HealthcareProvider]):
-
-    def __init__(self, db_session: DbSession):
-        super().__init__(session=db_session, cls_model=HealthcareProvider)
+    @property
+    def order_by(self) -> tuple[ColumnExpressionArgument[Any] | str, ...]:
+        return (HealthcareProvider.created_at.desc(),)
 
     def _apply_join(self, stmt: Select[_T]) -> Select[_T]:
         return (
@@ -40,16 +39,10 @@ class HealthcareProviderRepository(RepositoryBase[HealthcareProvider]):
             Protocol.name.label("protocol"),
             Protocol.protocol_type,
         )
-        results = self.session.session.execute(
+        return self.session.execute(
             self._apply_join(select_stmt).limit(limit).offset(offset)
         )
 
-        return results
-
     def get_total_qualified_providers(self) -> int:
         select_stmt = select(func.count())
-        results = self.session.session.execute(self._apply_join(select_stmt)).scalar()
-        if results is None:
-            return 0
-
-        return results
+        return self.session.execute(self._apply_join(select_stmt)).scalar() or 0
