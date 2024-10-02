@@ -21,12 +21,12 @@ from app.schemas.qualification.schema import QualificationDto
 
 
 class HealthcareProviderService:
-
     @session_manager
     def get_paginated(
         self,
         limit: int,
         offset: int,
+        *,
         healthcare_provider_repository: HealthcareProviderRepository = get_repository(),
     ) -> Page[QualificationDto]:
         healthcare_providers = healthcare_provider_repository.get_many(
@@ -43,6 +43,7 @@ class HealthcareProviderService:
     def get(
         self,
         provider_id: UUID,
+        *,
         healthcare_provider_repository: HealthcareProviderRepository = get_repository(),
     ) -> HealthcareProviderDto:
         db_provider = healthcare_provider_repository.get(id=provider_id)
@@ -56,6 +57,7 @@ class HealthcareProviderService:
         self,
         limit: int,
         offset: int,
+        *,
         healthcare_providers_repository: HealthcareProviderRepository = get_repository(),
     ) -> Page[QualifiedHealthcareProviderDTO]:
         db_rows = healthcare_providers_repository.get_qualified_providers(

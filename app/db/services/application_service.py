@@ -9,7 +9,7 @@ from app.db.repository.application_repository import ApplicationRepository
 from app.exceptions.http_base_exceptions import NotFoundException
 from app.schemas.application.mapper import (
     map_application_entity_to_dto,
-    map_application_entities_to_dtos
+    map_application_entities_to_dtos,
 )
 from app.schemas.application.schema import ApplicationWithVendorDto
 
@@ -19,6 +19,7 @@ class ApplicationService:
     def get(
         self,
         id: UUID,
+        *,
         application_repository: ApplicationRepository = get_repository(),
     ) -> ApplicationWithVendorDto:
         entity = application_repository.get(id=id)
@@ -31,7 +32,8 @@ class ApplicationService:
         self,
         limit: int,
         offset: int,
-        application_repository: ApplicationRepository = get_repository()
+        *,
+        application_repository: ApplicationRepository = get_repository(),
     ) -> Page[ApplicationWithVendorDto]:
         applications = application_repository.get_many(limit=limit, offset=offset)
         dto = map_application_entities_to_dtos(entities=applications)
