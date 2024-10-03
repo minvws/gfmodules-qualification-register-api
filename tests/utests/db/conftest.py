@@ -9,11 +9,6 @@ from inject import configure, instance
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.db.entities import HealthcareProvider, Protocol, ProtocolVersion, Role
-from app.db.repository import (
-    HealthcareProviderRepository,
-    ProtocolRepository,
-    RoleRepository,
-)
 from tests.utests.db.utils import container_config
 
 

@@ -1,4 +1,7 @@
-from typing import Literal, Type
+import re
+from enum import StrEnum, auto
+from typing import Type
+
 from gfmodules_python_shared.schema.sql_model import TSQLModel
 from inject import Binder, instance
 from sqlalchemy.orm import Session, sessionmaker
@@ -29,35 +32,26 @@ def container_config(binder: Binder) -> None:
     )
 
 
-def _get_service_class(service: str) -> Type[Service]:
-    match service:
-        case "vendor":
-            return VendorService
-        case "vendor_qualification":
-            return VendorQualificationService
-        case "role":
-            return RoleService
-        case "system_type":
-            return SystemTypeService
-        case "application":
-            return ApplicationService
-        case "healthcare_provider":
-            return HealthcareProviderService
-        case _:
-            raise ValueError(f"{service} is not supported")
+class Services(StrEnum):
+    APPLICATION = auto()
+    HEALTHCARE_PROVIDER = auto()
+    ROLE = auto()
+    SYSTEM_TYPE = auto()
+    VENDOR = auto()
+    VENDOR_QUALIFICATION = auto()
 
+    @property
+    def _to_pascal_case(self) -> str:
+        return re.sub(
+            r"(^|_)([a-z])", lambda match: match.group(2).upper(), self.lower()
+        )
 
-def get_service(
-    service: Literal[
-        "vendor",
-        "vendor_qualification",
-        "role",
-        "system_type",
-        "application",
-        "healthcare_provider",
-    ],
-) -> Service:
-    return instance(_get_service_class(service))  # type: ignore
+    @property
+    def _service_type(self) -> Type[Service]:
+        return eval(f"{self._to_pascal_case}Service")  # type: ignore
+
+    def get_instance(self) -> Service:
+        return instance(self._service_type)  # type: ignore
 
 
 def are_the_same_entity(actual: TSQLModel, comparer: TSQLModel) -> bool:

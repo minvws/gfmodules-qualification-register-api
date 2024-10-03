@@ -1,29 +1,21 @@
 import datetime
+from uuid import UUID
 
 import pytest
 from gfmodules_python_shared.schema.pagination.page_schema import Page
+from sqlalchemy.orm import Session
 
-from app.db.entities.application import Application
-from app.db.entities.application_version import ApplicationVersion
-from app.db.entities.application_version_qualification import (
+from app.db.entities import (
+    Application,
+    ApplicationVersion,
     ApplicationVersionQualification,
-)
-from app.db.entities.healthcare_provider import HealthcareProvider
-from app.db.entities.healthcare_provider_application_version import (
+    HealthcareProvider,
     HealthcareProviderApplicationVersion,
-)
-from app.db.entities.healthcare_provider_qualification import (
     HealthcareProviderQualification,
+    Protocol,
+    ProtocolVersion,
 )
-from app.db.entities.protocol import Protocol
-from app.db.entities.protocol_version import ProtocolVersion
-from app.db.repository.application_repository import ApplicationRepository
-
-from app.db.repository.healthcare_provider_repository import (
-    HealthcareProviderRepository,
-)
-from app.db.repository.protocol_repository import ProtocolRepository
-from app.db.services.healthcare_provider_service import HealthcareProviderService
+from app.db.services import HealthcareProviderService
 from app.exceptions.http_base_exceptions import NotFoundException
 from app.schemas.healthcare_provider.schema import HealthcareProviderDto
 from app.schemas.healthcare_provider_qualification.schema import (
@@ -31,118 +23,101 @@ from app.schemas.healthcare_provider_qualification.schema import (
 )
 
 
-class TestHealthcareProvidersService:
+def test_get_qualified_healthcare_providers_should_succeed(
+    session: Session,
+    healthcare_provider: HealthcareProvider,
+    protocol: Protocol,
+    protocol_version: ProtocolVersion,
+    application: Application,
+    application_version: ApplicationVersion,
+    healthcare_provider_service: HealthcareProviderService,
+):
+    healthcare_provider_qualification = HealthcareProviderQualification(
+        healthcare_provider=healthcare_provider,
+        protocol_version=protocol_version,
+        qualification_date=datetime.date.today(),
+    )
+    provider_application_version = HealthcareProviderApplicationVersion(
+        healthcare_provider=healthcare_provider,
+        application_version=application_version,
+    )
+    application_qualification = ApplicationVersionQualification(
+        application_version=application_version,
+        protocol_version=protocol_version,
+        qualification_date=datetime.date.today(),
+    )
+    protocol_version.qualified_application_versions.append(application_qualification)
+    healthcare_provider.application_versions.append(provider_application_version)
 
-    def test_get_qualified_healthcare_providers_should_succeed(
-        self,
-        mock_healthcare_provider: HealthcareProvider,
-        mock_protocol: Protocol,
-        mock_protocol_version: ProtocolVersion,
-        mock_application: Application,
-        mock_application_version: ApplicationVersion,
-        healthcare_provider_service: HealthcareProviderService,
-        healthcare_provider_repository: HealthcareProviderRepository,
-        protocol_repository: ProtocolRepository,
-        application_repository: ApplicationRepository,
-    ):
-        mock_healthcare_provider_qualification = HealthcareProviderQualification(
-            healthcare_provider=mock_healthcare_provider,
-            protocol_version=mock_protocol_version,
-            qualification_date=datetime.date.today(),
-        )
-        provider_application_version = HealthcareProviderApplicationVersion(
-            healthcare_provider=mock_healthcare_provider,
-            application_version=mock_application_version,
-        )
-        mock_application_qualification = ApplicationVersionQualification(
-            application_version=mock_application_version,
-            protocol_version=mock_protocol_version,
-            qualification_date=datetime.date.today(),
-        )
-        mock_protocol_version.qualified_application_versions.append(
-            mock_application_qualification
-        )
-        mock_healthcare_provider.application_versions.append(
-            provider_application_version
-        )
+    with session.begin():
+        session.add(application)
+        session.add(healthcare_provider)
 
-        application_repository.create(mock_application)
-        protocol_repository.create(mock_protocol)
-        healthcare_provider_repository.create(mock_healthcare_provider)
-
-        data = [
-            QualifiedHealthcareProviderDTO(
-                qualification_id=mock_healthcare_provider_qualification.id,
-                healthcare_provider_id=mock_healthcare_provider.id,
-                protocol_id=mock_protocol.id,
-                protocol_version_id=mock_protocol_version.id,
-                healthcare_provider=mock_healthcare_provider.trade_name,
-                protocol=mock_protocol.name,
-                protocol_type=mock_protocol.protocol_type,
-                protocol_version=mock_protocol_version.version,
-                qualification_date=mock_healthcare_provider_qualification.qualification_date,
-            )
-        ]
-        expected_qualified_providers = Page(
-            items=data,
-            limit=10,
-            offset=0,
-            total=1,
+    data = [
+        QualifiedHealthcareProviderDTO(
+            qualification_id=healthcare_provider_qualification.id,
+            healthcare_provider_id=healthcare_provider.id,
+            protocol_id=protocol.id,
+            protocol_version_id=protocol_version.id,
+            healthcare_provider=healthcare_provider.trade_name,
+            protocol=protocol.name,
+            protocol_type=protocol.protocol_type,
+            protocol_version=protocol_version.version,
+            qualification_date=healthcare_provider_qualification.qualification_date,
         )
-        actual_qualified_providers = (
-            healthcare_provider_service.get_qualified_healthcare_providers(
-                limit=10, offset=0
-            )
-        )
+    ]
+    assert healthcare_provider_service.get_qualified_healthcare_providers(
+        limit=10, offset=0
+    ) == Page(items=data, limit=10, offset=0, total=1)
 
-        assert expected_qualified_providers == actual_qualified_providers
 
-    def get_should_succeed(
-        self,
-        mock_healthcare_provider: HealthcareProvider,
-        healthcare_provider_service: HealthcareProviderService,
-        healthcare_provider_repository: HealthcareProviderRepository,
-    ):
-        healthcare_provider_repository.create(mock_healthcare_provider)
+def get_should_succeed(
+    session: Session,
+    healthcare_provider: HealthcareProvider,
+    healthcare_provider_service: HealthcareProviderService,
+):
+    with session.begin():
+        session.add(healthcare_provider)
 
-        expected_healthcare_provider = HealthcareProviderDto(
-            id=mock_healthcare_provider.id,
-            ura_code=mock_healthcare_provider.ura_code,
-            agb_code=mock_healthcare_provider.agb_code,
-        )
-        actual_healthcare_provider = healthcare_provider_service.get(
-            provider_id=mock_healthcare_provider.id
+    assert healthcare_provider_service.get(
+        provider_id=healthcare_provider.id
+    ) == HealthcareProviderDto(
+        id=healthcare_provider.id,
+        ura_code=healthcare_provider.ura_code,
+        agb_code=healthcare_provider.agb_code,
+        trade_name=healthcare_provider.trade_name,
+        statutory_name=healthcare_provider.statutory_name,
+    )
+
+
+def get_should_fail_when_provided_incorrect_id(
+    session: Session,
+    healthcare_provider: HealthcareProvider,
+    healthcare_provider_service: HealthcareProviderService,
+):
+    with session.begin():
+        session.add(healthcare_provider)
+
+    with pytest.raises(NotFoundException):
+        healthcare_provider_service.get(
+            provider_id=UUID("b272e0ad-c9e9-4899-9243-52a3fe543454")
         )
 
-        assert expected_healthcare_provider == actual_healthcare_provider
 
-    def get_should_fail_when_provided_incorrect_id(
-        self,
-        mock_healthcare_provider: HealthcareProvider,
-        healthcare_provider_service: HealthcareProviderService,
-        healthcare_provider_repository: HealthcareProviderRepository,
-    ):
-        healthcare_provider_repository.create(mock_healthcare_provider)
-        with pytest.raises(NotFoundException):
-            healthcare_provider_service.get(provider_id="some wrong id")
-
-    def get_paginated_should_succeed(
-        self,
-        mock_healthcare_provider: HealthcareProvider,
-        healthcare_provider_service: HealthcareProviderService,
-        healthcare_provider_repository: HealthcareProviderRepository,
-    ):
-        healthcare_provider_repository.create(mock_healthcare_provider)
-        data = HealthcareProviderDto(
-            id=mock_healthcare_provider.id,
-            ura_code=mock_healthcare_provider.ura_code,
-            agb_code=mock_healthcare_provider.agb_code,
-            trade_name=mock_healthcare_provider.trade_name,
-            statutory_name=mock_healthcare_provider.statutory_name,
-        )
-        expected_healthcare_providers = Page(items=data, limit=10, offset=0, total=1)
-        actual_healthcare_providers = healthcare_provider_service.get_paginated(
-            limit=10, offset=0
-        )
-
-        assert expected_healthcare_providers == actual_healthcare_providers
+def get_paginated_should_succeed(
+    session: Session,
+    healthcare_provider: HealthcareProvider,
+    healthcare_provider_service: HealthcareProviderService,
+):
+    with session.begin():
+        session.add(healthcare_provider)
+    data = HealthcareProviderDto(
+        id=healthcare_provider.id,
+        ura_code=healthcare_provider.ura_code,
+        agb_code=healthcare_provider.agb_code,
+        trade_name=healthcare_provider.trade_name,
+        statutory_name=healthcare_provider.statutory_name,
+    )
+    assert healthcare_provider_service.get_paginated(limit=10, offset=0) == Page(
+        items=[data], limit=10, offset=0, total=1
+    )
