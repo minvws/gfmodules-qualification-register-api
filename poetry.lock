@@ -351,7 +351,7 @@ sqlalchemy = "^2.0.25"
 
 [package.source]
 type = "git"
-url = "https://github.com/minvws/gfmodules-python-shared.git"
+url = "https://github.com/minvws/gfmodules-python-shared-private.git"
 reference = "v0.0.4"
 resolved_reference = "b3d300dd04497f9d07d463eef4422901acd64498"
 
@@ -1677,4 +1677,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "e991169e1aa96bcfbe10665a8b2373ffc4e33554834f616ae8bf3722deb3d4e7"
+content-hash = "ba9bbe4345dd83e26a302e8a70eea070cca524a4f5f5afe644fdb38cca797258"

@@ -6,9 +6,7 @@ license = "EUPL-1.2"
 authors = ["Ministerie van Volksgezondheid, Welzijn en Sport"]
 repository = "https://github.com/minvws/nl-irealisatie-zmodules-qualification-register-api"
 readme = "README.md"
-packages = [
-    { include = "app" },
-]
+packages = [{ include = "app" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -21,7 +19,7 @@ sqlalchemy = "^2.0.25"
 psycopg = { extras = ["binary", "pool"], version = "^3.1.17" }
 uuid = "^1.30"
 pytest-mock = "^3.14.0"
-gfmodules-python-shared = { git="https://github.com/minvws/gfmodules-python-shared.git", tag = "v0.0.4" }
+gfmodules-python-shared = { git = "https://github.com/minvws/gfmodules-python-shared-private.git", tag = "v0.0.4" }
 statsd = "^4.0.1"
 opentelemetry-sdk = "^1.24.0"
 opentelemetry-exporter-otlp-proto-grpc = "^1.24.0"
@@ -43,11 +41,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 cache-dir = "~/.cache/ruff"
-include = [
-    "pyproject.toml",
-    "app/*.py",
-    "tests/*.py",
-]
+include = ["pyproject.toml", "app/*.py", "tests/*.py"]
 
 [tool.mypy]
 files = "app,tests"
@@ -58,9 +52,7 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 cache_dir = "~/.cache/pytest"
-testpaths = [
-    "tests",
-]
+testpaths = ["tests"]
 
 [tool.coverage.run]
 branch = true

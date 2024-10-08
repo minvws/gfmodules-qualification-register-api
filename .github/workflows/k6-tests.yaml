@@ -34,7 +34,7 @@ jobs:
         - name: Checkout SQL from admin repository
           uses: actions/checkout@v4
           with:
-            repository: minvws/nl-irealisatie-zmodules-qualification-register-admin-api
+            repository: minvws/gfmodules-qualification-register-admin-api-private
             token: ${{ secrets.REPO_READ_ONLY_TOKEN }}
             path: admin-api
 
