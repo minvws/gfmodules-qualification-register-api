@@ -59,7 +59,7 @@ COPY --chown=${APP_USER}:${APP_GROUP} --from=builder /usr/local /usr/local
 USER ${APP_USER}
 WORKDIR ${PROJECT_DIR}
 
-RUN poetry config repositories.git-minvws-gfmodules-python-shared https://github.com/minvws/gfmodules-python-shared.git
+RUN poetry config repositories.git-minvws-gfmodules-python-shared-private https://github.com/minvws/gfmodules-python-shared-private.git
 
 EXPOSE 8507:8507
 
