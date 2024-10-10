@@ -19,7 +19,7 @@ sqlalchemy = "^2.0.25"
 psycopg = { extras = ["binary", "pool"], version = "^3.1.17" }
 uuid = "^1.30"
 pytest-mock = "^3.14.0"
-gfmodules-python-shared = { git = "https://github.com/minvws/gfmodules-python-shared-private.git", tag = "v0.0.4" }
+gfmodules-python-shared = { git = "https://github.com/minvws/gfmodules-python-shared-private.git", tag = "v0.1.0" }
 statsd = "^4.0.1"
 opentelemetry-sdk = "^1.24.0"
 opentelemetry-exporter-otlp-proto-grpc = "^1.24.0"

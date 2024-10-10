@@ -1,25 +1,15 @@
-import pytest
+from typing import cast
 
-from app.db.entities.role import Role
-from app.db.repository.role_repository import RoleRepository
-
-
-@pytest.fixture()
-def mock_role() -> Role:
-    return Role(
-        name="aRole",
-        description=None
-    )
+from sqlalchemy.orm import Session
+from app.db.entities import Role
+from app.db.repository import RoleRepository
+from tests.utests.db.repositories.test_healthcare_provider_repository import Inserter
+from tests.utests.db.utils import are_the_same_entity
 
 
-class TestRoleRepository:
-
-    def test_create_should_succeed_when_given_a_valid_role_object(self, role_repository: RoleRepository,
-                                                                  mock_role: Role):
-        expected_role = mock_role
-
-        role_repository.create(mock_role)
-        actual_role = role_repository.get(id=mock_role.id)
-
-        assert actual_role == expected_role
-        assert role_repository.count() == 1
+def test_create_should_succeed_when_given_a_valid_role_object(
+    session: Session, insert_entities: Inserter[Role], role: Role
+):
+    repository = cast(RoleRepository, insert_entities(session, RoleRepository, (role,)))
+    assert are_the_same_entity(repository.get_or_fail(id=role.id), role)
+    assert repository.count() == 1

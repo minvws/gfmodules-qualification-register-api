@@ -1,26 +1,26 @@
 from typing import Any
 
-from gfmodules_python_shared.repository.repository_base import RepositoryBase
-from gfmodules_python_shared.session.db_session import DbSession
-from sqlalchemy import Result, select, func
+from gfmodules_python_shared.repository.base import RepositoryBase
+from sqlalchemy import ColumnExpressionArgument, Result, func, select
 
-from app.db.entities.application import Application
-from app.db.entities.application_role import ApplicationRole
-from app.db.entities.application_type import ApplicationType
-from app.db.entities.application_version import ApplicationVersion
-from app.db.entities.application_version_qualification import (
+from app.db.entities import (
+    Vendor,
+    Application,
+    ApplicationVersion,
     ApplicationVersionQualification,
+    ApplicationRole,
+    ApplicationType,
+    SystemType,
+    Protocol,
+    Role,
+    ProtocolVersion,
 )
-from app.db.entities.protocol import Protocol
-from app.db.entities.protocol_version import ProtocolVersion
-from app.db.entities.role import Role
-from app.db.entities.system_type import SystemType
-from app.db.entities.vendor import Vendor
 
 
 class VendorRepository(RepositoryBase[Vendor]):
-    def __init__(self, db_session: DbSession):
-        super().__init__(session=db_session, cls_model=Vendor)
+    @property
+    def order_by(self) -> tuple[ColumnExpressionArgument[Any] | str, ...]:
+        return (Vendor.created_at.desc(),)
 
     def get_qualified_vendors(
         self, limit: int | None = None, offset: int | None = None
@@ -60,7 +60,7 @@ class VendorRepository(RepositoryBase[Vendor]):
             .offset(offset)
         )
 
-        results = self.session.session.execute(
+        results = self.session.execute(
             stmt,
         )
 
@@ -81,7 +81,7 @@ class VendorRepository(RepositoryBase[Vendor]):
             .outerjoin(ProtocolVersion.protocol)
             .outerjoin(Application.vendor)
         )
-        result = self.session.session.execute(stmt).scalar()
+        result = self.session.execute(stmt).scalar()
         if result is None:
             return 0
 

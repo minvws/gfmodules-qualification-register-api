@@ -1,197 +1,126 @@
-from typing import Generator, Any
+from datetime import date
+from typing import cast
+from uuid import UUID
 
-import inject
 import pytest
-from gfmodules_python_shared.repository.repository_factory import RepositoryFactory
-from gfmodules_python_shared.session.db_session import DbSession
-from gfmodules_python_shared.session.session_factory import DbSessionFactory
 
-from app.db.db import Database
-from app.db.entities.application import Application
-from app.db.entities.application_role import ApplicationRole
-from app.db.entities.application_type import ApplicationType
-from app.db.entities.application_version import ApplicationVersion
-from app.db.entities.healthcare_provider import HealthcareProvider
+from app.db.entities import (
+    Application,
+    ApplicationRole,
+    ApplicationType,
+    ApplicationVersion,
+    Role,
+    SystemType,
+    Vendor,
+)
+from app.db.entities.application_version_qualification import (
+    ApplicationVersionQualification,
+)
 from app.db.entities.protocol import Protocol
-from app.db.entities.protocol_version import ProtocolVersion
-from app.db.entities.role import Role
-from app.db.entities.system_type import SystemType
-from app.db.entities.vendor import Vendor
-from app.db.repository.application_repository import ApplicationRepository
-from app.db.repository.application_version_qualification_repository import (
-    ApplicationVersionQualificationRepository,
+from app.db.services import (
+    ApplicationService,
+    HealthcareProviderService,
+    RoleService,
+    SystemTypeService,
+    VendorQualificationService,
+    VendorService,
 )
-
-from app.db.repository.healthcare_provider_repository import (
-    HealthcareProviderRepository,
-)
-from app.db.repository.protocol_repository import ProtocolRepository
-from app.db.repository.role_repository import RoleRepository
-from app.db.repository.system_type_repository import SystemTypeRepository
-from app.db.repository.vendor_repository import VendorRepository
-from app.db.services.application_service import ApplicationService
-from app.db.services.healthcare_provider_service import HealthcareProviderService
-from app.db.services.role_service import RoleService
-from app.db.services.system_type_service import SystemTypeService
-from app.db.services.vendor_qualification_service import VendorQualificationService
-from app.db.services.vendor_service import VendorService
+from tests.utests.db.utils import Services
 
 
 @pytest.fixture
-def session() -> Generator[DbSession, Any, None]:
-    db = Database("sqlite:///:memory:")
-    db.generate_tables()
-    session_factory = DbSessionFactory(db.engine)
-    session = session_factory.create()
-
-    repository_factory = RepositoryFactory()
-
-    inject.configure(
-        lambda binder: binder.bind(DbSessionFactory, session_factory).bind(  # type: ignore
-            RepositoryFactory, repository_factory
-        ),
-        clear=True,
-    )
-
-    yield session
+def vendor_service() -> VendorService:
+    return cast(VendorService, Services.VENDOR.get_instance())
 
 
 @pytest.fixture
-def application_service(session: DbSession) -> ApplicationService:
-    return ApplicationService()
+def role_service() -> RoleService:
+    return cast(RoleService, Services.ROLE.get_instance())
 
 
 @pytest.fixture
-def application_repository(session: DbSession) -> ApplicationRepository:
-    return ApplicationRepository(db_session=session)
+def system_type_service() -> SystemTypeService:
+    return cast(SystemTypeService, Services.SYSTEM_TYPE.get_instance())
 
 
 @pytest.fixture
-def healthcare_provider_repository(session: DbSession) -> HealthcareProviderRepository:
-    return HealthcareProviderRepository(db_session=session)
+def application_service() -> ApplicationService:
+    return cast(ApplicationService, Services.APPLICATION.get_instance())
 
 
 @pytest.fixture
-def healthcare_provider_service(session: DbSession) -> HealthcareProviderService:
-    return HealthcareProviderService()
-
-
-@pytest.fixture
-def role_service(session: DbSession) -> RoleService:
-    return RoleService()
-
-
-@pytest.fixture
-def role_repository(session: DbSession) -> RoleRepository:
-    return RoleRepository(db_session=session)
-
-
-@pytest.fixture
-def protocol_repository(session: DbSession) -> ProtocolRepository:
-    return ProtocolRepository(db_session=session)
-
-
-@pytest.fixture
-def application_version_qualification_repository(
-    session: DbSession,
-) -> ApplicationVersionQualificationRepository:
-    return ApplicationVersionQualificationRepository(db_session=session)
-
-
-@pytest.fixture
-def system_type_service(session: DbSession) -> SystemTypeService:
-    return SystemTypeService()
-
-
-@pytest.fixture
-def system_type_repository(session: DbSession) -> SystemTypeRepository:
-    return SystemTypeRepository(db_session=session)
-
-
-@pytest.fixture
-def vendor_service(session: DbSession) -> VendorService:
-    return VendorService()
-
-
-@pytest.fixture
-def vendor_repository(session: DbSession) -> VendorRepository:
-    return VendorRepository(db_session=session)
+def healthcare_provider_service() -> HealthcareProviderService:
+    return cast(HealthcareProviderService, Services.HEALTHCARE_PROVIDER.get_instance())
 
 
 @pytest.fixture
 def vendor_qualification_service() -> VendorQualificationService:
-    return VendorQualificationService()
-
-
-@pytest.fixture
-def mock_vendor() -> Vendor:
-    return Vendor(
-        kvk_number="example",
-        trade_name="example",
-        statutory_name="example",
+    return cast(
+        VendorQualificationService, Services.VENDOR_QUALIFICATION.get_instance()
     )
 
 
 @pytest.fixture
-def mock_application_version() -> ApplicationVersion:
-    return ApplicationVersion(version="example")
+def vendor() -> Vendor:
+    return Vendor(
+        id=UUID("eb213a0f-245e-4ffb-adaa-cecd3fcb30aa"),
+        kvk_number="000000001",
+        trade_name="Vendor A - Trade Name",
+        statutory_name="Vendor A - Statutory Name",
+    )
 
 
 @pytest.fixture
-def mock_system_type() -> SystemType:
-    return SystemType(name="example")
+def application_version() -> ApplicationVersion:
+    return ApplicationVersion(
+        id=UUID("abe43e15-c7bd-456c-aa82-7500275d72d5"), version="example"
+    )
 
 
 @pytest.fixture
-def mock_role() -> Role:
-    return Role(name="example")
+def system_type() -> SystemType:
+    return SystemType(id=UUID("27f358c3-9a9b-499b-b829-a0b08405c5b5"), name="example")
 
 
 @pytest.fixture
-def mock_application(
-    mock_vendor: Vendor,
-    mock_application_version: ApplicationVersion,
-    mock_system_type: SystemType,
-    mock_role: Role,
+def application(
+    vendor: Vendor,
+    application_version: ApplicationVersion,
+    system_type: SystemType,
+    role: Role,
 ) -> Application:
-    mock_application = Application(
+    entity = Application(
+        id=UUID("33e821f7-bf51-46cc-a52c-fd17d7e6acda"),
         name="example",
-        vendor=mock_vendor,
-        versions=[mock_application_version],
+        vendor=vendor,
+        versions=[application_version],
         system_types=[],
         roles=[],
     )
-    mock_application_role = ApplicationRole(
-        application=mock_application, role=mock_role
+    entity.system_types.append(
+        ApplicationType(
+            id=UUID("dad7cf44-7579-4f60-8114-22fec546f53f"),
+            application=entity,
+            system_type=system_type,
+        )
     )
-    mock_application_type = ApplicationType(
-        application=mock_application, system_type=mock_system_type
+    entity.roles.append(
+        ApplicationRole(
+            id=UUID("45664631-4b4c-4191-b289-c97a0a7bb135"),
+            application=entity,
+            role=role,
+        )
     )
-
-    mock_application.system_types.append(mock_application_type)
-    mock_application.roles.append(mock_application_role)
-    return mock_application
+    return entity
 
 
 @pytest.fixture
-def mock_protocol_version() -> ProtocolVersion:
-    return ProtocolVersion(version="example")
-
-
-@pytest.fixture
-def mock_protocol(mock_protocol_version: ProtocolVersion) -> Protocol:
-    return Protocol(
-        protocol_type="InformationStandard",
-        name="example",
-        versions=[mock_protocol_version],
-    )
-
-
-@pytest.fixture
-def mock_healthcare_provider() -> HealthcareProvider:
-    return HealthcareProvider(
-        ura_code="example",
-        agb_code="example",
-        trade_name="example",
-        statutory_name="example",
+def application_version_qualification(
+    application: Application, protocol: Protocol
+) -> ApplicationVersionQualification:
+    return ApplicationVersionQualification(
+        id=UUID("25e1a678-0082-456e-9538-6fe25316257c"),
+        application_version=application.versions[0],
+        protocol_version=protocol.versions[0],
+        qualification_date=date.today(),
     )

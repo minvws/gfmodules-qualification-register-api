@@ -9,12 +9,12 @@ from app.schemas.vendor_qualifications.schema import QualifiedVendorDTO
 
 
 class VendorQualificationService:
-
     @session_manager
     def get_paginated(
         self,
         limit: int,
         offset: int,
+        *,
         repository: VendorRepository = get_repository(),
     ) -> Page[QualifiedVendorDTO]:
         db_rows = repository.get_qualified_vendors(limit=limit, offset=offset)
