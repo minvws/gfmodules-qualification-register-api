@@ -1,8 +1,8 @@
 import inject
+from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.config import get_config
-from app.db.db import Database
 from app.db.services import (
     ApplicationService,
     HealthcareProviderService,
@@ -16,10 +16,11 @@ from app.db.services import (
 def container_config(binder: inject.Binder) -> None:
     config = get_config()
 
-    db = Database(dsn=config.database.dsn)
-    binder.bind(Database, db)
-
-    binder.bind(sessionmaker[Session], sessionmaker(db.engine))
+    engine = create_engine(
+        config.database.dsn, echo=False, pool_recycle=25, pool_size=10
+    )
+    binder.bind(Engine, engine)
+    binder.bind(sessionmaker[Session], sessionmaker(engine))
 
     healthcare_provider_service = HealthcareProviderService()
     binder.bind(HealthcareProviderService, healthcare_provider_service)
@@ -40,8 +41,8 @@ def container_config(binder: inject.Binder) -> None:
     binder.bind(VendorQualificationService, vendor_qualification_service)
 
 
-def get_database() -> Database:
-    return inject.instance(Database)
+def get_engine() -> Engine:
+    return inject.instance(Engine)
 
 
 def get_healthcare_provider_service() -> HealthcareProviderService:

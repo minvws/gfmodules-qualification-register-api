@@ -2,11 +2,11 @@ import re
 from enum import StrEnum, auto
 from typing import Type
 
-from gfmodules_python_shared.schema.sql_model import TSQLModel
+from gfmodules_python_shared.schema.sql_model import SQLModelBase, TSQLModel
 from inject import Binder, instance
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.db.db import Database
 from app.db.services import (
     ApplicationService,
     HealthcareProviderService,
@@ -19,10 +19,12 @@ from app.db.services import (
 
 
 def container_config(binder: Binder) -> None:
-    database = Database("sqlite:///:memory:", generate_tables=True)
+    engine = create_engine(
+        "sqlite:///:memory:", echo=False, pool_recycle=25, pool_size=10
+    )
+    SQLModelBase.metadata.create_all(engine)
     (
-        binder.bind(Database, database)
-        .bind(sessionmaker[Session], sessionmaker(database.engine))
+        binder.bind(sessionmaker[Session], sessionmaker(engine))
         .bind(VendorService, VendorService())
         .bind(RoleService, RoleService())
         .bind(SystemTypeService, SystemTypeService())
