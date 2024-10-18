@@ -353,8 +353,8 @@ sqlalchemy = "^2.0.25"
 [package.source]
 type = "git"
 url = "https://github.com/minvws/gfmodules-python-shared-private.git"
-reference = "v0.1.0"
-resolved_reference = "b3869ca9adc8ec634e592ede109bf2e51fc2aa8c"
+reference = "v0.1.1"
+resolved_reference = "8295e3b724f3bf6b08a817f933551316c5642782"
 
 [[package]]
 name = "googleapis-common-protos"
@@ -1689,4 +1689,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "6edc4f80dae073b16a6b7d8253b18dab2de1a17a223c9b384c7a81aba3ea068e"
+content-hash = "256ac486804b09de6532c3ba82826d301fc2d934366dbff4b1dae05dd5e04658"
