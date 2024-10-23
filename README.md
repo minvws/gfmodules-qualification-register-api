@@ -3,6 +3,23 @@
 This application is the public API for the Qualification Register which is part of the GFModules project of the
 iRealisatie cluster of the Ministry of Health, Welfare and Sport.
 
+## Disclaimer
+
+This project and all associated code serve solely as **documentation and demonstration
+purposes** to illustrate potential system communication patterns and architectures.
+
+This codebase:
+
+- Is NOT intended for production use
+- Does NOT represent a final specification
+- Should NOT be considered feature-complete or secure
+- May contain errors, omissions, or oversimplified implementations
+- Has NOT been tested or hardened for real-world scenarios
+
+The code examples are *only* meant to help understand concepts and demonstrate possibilities.
+
+By using or referencing this code, you acknowledge that you do so at your own risk
+and that the authors assume no liability for any consequences of its use.
 
 ## First run
 
@@ -17,8 +34,7 @@ make autopilot
 ```
 
 This will configure the whole system for you and you should be able to use the API right away at
-https://localhost:8507/docs
-
+<https://localhost:8507/docs>
 
 ## Usage
 
